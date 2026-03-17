@@ -527,27 +527,34 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         <div style="padding:16px 18px;">
           <div class="section-tag tag-note">NOTE</div>
           <div class="slot-card">
-            <div class="slot-header">
-              <div class="slot-num">1</div>
-              <div class="slot-label">サムネイル（固定）</div>
-            </div>
+            <div class="slot-header"><div class="slot-num">1</div><div class="slot-label">サムネイル（固定）</div></div>
             <div class="slot-body">
               <div class="src-tabs">
-                <div class="src-tab">なし</div>
-                <div class="src-tab active teal">生成</div>
-                <div class="src-tab">ライブラリ固定</div>
+                <div class="src-tab" onclick="setTab(this,'none')">なし</div>
+                <div class="src-tab" onclick="setTab(this,'ref')">別SNSから流用</div>
+                <div class="src-tab active teal" onclick="setTab(this,'gen')">生成</div>
+                <div class="src-tab" onclick="setTab(this,'lib')">ライブラリ固定</div>
               </div>
-              <div class="sub-panel teal">
-                <div class="form-group" style="margin-bottom:10px;">
-                  <label>生成プロンプト</label>
-                  <textarea style="min-height:50px;">金融・投資テーマの洗練されたサムネイル。グラフや数字を取り入れたデザイン。</textarea>
+              <div class="src-detail" data-mode="none" style="display:none;"></div>
+              <div class="src-detail" data-mode="ref" style="display:none;">
+                <div class="sub-panel"><div class="two-col">
+                  <div class="form-group" style="margin:0;"><label>流用元SNS</label><select><option>YouTube サムネイル</option></select></div>
+                  <div class="form-group" style="margin:0;"><label>バージョン</label><select><option>文字入れ後</option><option>文字入れ前（生画像）</option></select></div>
+                </div></div>
+                <p style="font-size:11px;color:var(--gray-light);margin-top:6px;padding:6px 10px;background:var(--blue-bg);border-radius:4px;border-left:3px solid var(--warning);">⚠️ NOTE → YouTube の流用は逆順。YouTubeが先に生成された場合のみ利用可</p>
+              </div>
+              <div class="src-detail" data-mode="gen" style="display:block;">
+                <div class="sub-panel teal">
+                  <div class="form-group" style="margin-bottom:10px;"><label>生成プロンプト</label><textarea style="min-height:50px;">金融・投資テーマの洗練されたサムネイル。グラフや数字を取り入れたデザイン。</textarea></div>
+                  <div class="form-group" style="margin:0;"><label>文字入れ</label><select><option>タイトルを自動挿入</option><option>なし（画像のみ）</option><option>カスタムテキスト</option></select></div>
                 </div>
-                <div class="form-group" style="margin:0;">
-                  <label>文字入れ</label>
-                  <select><option>タイトルを自動挿入</option><option>なし（画像のみ）</option><option>カスタムテキスト</option></select>
+                <p style="font-size:11px;color:var(--gray-light);margin-top:8px;padding:6px 10px;background:var(--blue-bg);border-radius:4px;border-left:3px solid var(--blue-mid);">生成後「文字入れ前（_raw）」と「文字入れ後（_with_text）」の両方を保存 → 後続SNSから参照可能</p>
+              </div>
+              <div class="src-detail" data-mode="lib" style="display:none;">
+                <div class="sub-panel amber"><label style="font-size:12px;font-weight:600;margin-bottom:6px;display:block;">キーマッピング</label>
+                  <div style="display:flex;gap:8px;align-items:center;"><input type="text" placeholder="キー（例: 第1話）" style="flex:1;"/><span style="color:var(--gray-light);">=</span><div style="flex:2;background:var(--white);border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--gray-light);cursor:pointer;">📎 ファイルを選択...</div></div>
                 </div>
               </div>
-              <p style="font-size:11px;color:var(--gray-light);margin-top:8px;padding:6px 10px;background:var(--blue-bg);border-radius:4px;border-left:3px solid var(--blue-mid);">生成後「文字入れ前」と「文字入れ後」の両方を保存 → 他SNSから参照可能</p>
             </div>
           </div>
         </div>
@@ -733,7 +740,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
       </div>
 
       <!-- YouTube -->
-      <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;">
+      <div style="border:1px solid var(--border);border-radius:10px;margin-bottom:16px;overflow:hidden;">
         <div style="display:flex;align-items:center;gap:10px;padding:14px 18px;background:var(--blue-bg);border-bottom:1px solid var(--border);">
           <div style="width:28px;height:28px;border-radius:6px;background:#ff0000;display:flex;align-items:center;justify-content:center;">▶️</div>
           <div style="font-size:14px;font-weight:600;">YouTube</div>
@@ -741,21 +748,70 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         </div>
         <div style="padding:16px 18px;">
           <div class="section-tag tag-yt">YouTube</div>
+
+          <!-- サムネイルスロット -->
+          <div style="font-size:12px;font-weight:700;color:var(--gray);margin-bottom:8px;">🖼 サムネイル</div>
           <div class="slot-card">
-            <div class="slot-header">
-              <div class="slot-num">1</div>
-              <div class="slot-label">サムネイル（固定）</div>
-            </div>
+            <div class="slot-header"><div class="slot-num">1</div><div class="slot-label">サムネイル（固定）</div></div>
             <div class="slot-body">
               <div class="src-tabs">
-                <div class="src-tab">なし</div>
-                <div class="src-tab">別SNSから流用</div>
-                <div class="src-tab active teal">生成</div>
-                <div class="src-tab">ライブラリ固定</div>
+                <div class="src-tab" onclick="setTab(this,'none')">なし</div>
+                <div class="src-tab" onclick="setTab(this,'ref')">別SNSから流用</div>
+                <div class="src-tab active teal" onclick="setTab(this,'gen')">生成</div>
+                <div class="src-tab" onclick="setTab(this,'lib')">ライブラリ固定</div>
               </div>
-              <div class="sub-panel teal">
-                <div class="form-group" style="margin-bottom:8px;"><label>生成プロンプト</label><textarea style="min-height:50px;">YouTubeサムネイル用。目を引くデザイン、大きなテキスト対応、16:9比率。</textarea></div>
-                <div class="form-group" style="margin:0;"><label>文字入れ</label><select><option>タイトルを自動挿入</option><option>なし</option></select></div>
+              <div class="src-detail" data-mode="none" style="display:none;"></div>
+              <div class="src-detail" data-mode="ref" style="display:none;">
+                <div class="sub-panel"><div class="two-col">
+                  <div class="form-group" style="margin:0;"><label>流用元SNS</label><select><option>NOTE サムネイル（文字入れ後）</option><option>NOTE サムネイル（文字入れ前）</option></select></div>
+                  <div class="form-group" style="margin:0;"><label>バージョン</label><select><option>文字入れ後</option><option>文字入れ前（生画像）</option></select></div>
+                </div></div>
+              </div>
+              <div class="src-detail" data-mode="gen" style="display:block;">
+                <div class="sub-panel teal">
+                  <div class="form-group" style="margin-bottom:8px;"><label>生成プロンプト</label><textarea style="min-height:50px;">YouTubeサムネイル用。目を引くデザイン、大きなテキスト対応、16:9比率。</textarea></div>
+                  <div class="form-group" style="margin:0;"><label>文字入れ</label><select><option>タイトルを自動挿入</option><option>なし</option></select></div>
+                </div>
+              </div>
+              <div class="src-detail" data-mode="lib" style="display:none;">
+                <div class="sub-panel amber"><label style="font-size:12px;font-weight:600;margin-bottom:6px;display:block;">キーマッピング</label>
+                  <div style="display:flex;gap:8px;align-items:center;"><input type="text" placeholder="キー" style="flex:1;"/><span style="color:var(--gray-light);">=</span><div style="flex:2;background:var(--white);border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--gray-light);cursor:pointer;">📎 ファイルを選択...</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 動画設定 -->
+          <div style="font-size:12px;font-weight:700;color:var(--gray);margin:16px 0 8px;">🎬 動画</div>
+          <div class="slot-card">
+            <div class="slot-header"><div class="slot-num" style="background:var(--teal);">▶</div><div class="slot-label">動画ソース</div></div>
+            <div class="slot-body">
+              <div class="src-tabs">
+                <div class="src-tab" onclick="setTab(this,'none')">なし</div>
+                <div class="src-tab active teal" onclick="setTab(this,'gen')">Veo3生成</div>
+                <div class="src-tab" onclick="setTab(this,'lib')">ライブラリ固定</div>
+              </div>
+              <div class="src-detail" data-mode="none" style="display:none;"></div>
+              <div class="src-detail" data-mode="gen" style="display:block;">
+                <div class="sub-panel teal">
+                  <div class="form-group" style="margin-bottom:8px;"><label>動画生成モード</label>
+                    <select>
+                      <option>Veo3 — プロンプトから生成</option>
+                      <option>Veo3 フレーム補間 — 開始・終了画像から生成</option>
+                      <option>既存動画に文字だけ入れる</option>
+                    </select>
+                  </div>
+                  <div class="form-group" style="margin-bottom:8px;"><label>生成プロンプト</label><textarea style="min-height:50px;" placeholder="動画生成プロンプト（英語推奨）"></textarea></div>
+                  <div class="two-col">
+                    <div class="form-group" style="margin:0;"><label>縦横比</label><select><option>縦動画（9:16）</option><option>横動画（16:9）</option><option>正方形（1:1）</option></select></div>
+                    <div class="form-group" style="margin:0;"><label>文字入れ</label><select><option>なし</option><option>タイトルを自動挿入</option></select></div>
+                  </div>
+                </div>
+              </div>
+              <div class="src-detail" data-mode="lib" style="display:none;">
+                <div class="sub-panel amber"><label style="font-size:12px;font-weight:600;margin-bottom:6px;display:block;">キーマッピング（動画ファイル）</label>
+                  <div style="display:flex;gap:8px;align-items:center;"><input type="text" placeholder="キー" style="flex:1;"/><span style="color:var(--gray-light);">=</span><div style="flex:2;background:var(--white);border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--gray-light);cursor:pointer;">📎 動画ファイルを選択...</div></div>
+                </div>
               </div>
             </div>
           </div>
