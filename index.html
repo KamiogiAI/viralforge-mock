@@ -367,21 +367,56 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
       <!-- PAGE 4: YouTube設定 -->
       <div class="tab-panel" id="ps-yt">
         <div class="section-tag tag-yt">YouTube</div>
-        <div class="two-col" style="margin-bottom:16px;">
-          <div class="form-group" style="margin:0;"><label>動画タイプ</label><select><option>長尺動画</option><option>Shorts（縦型60秒以内）</option></select></div>
-          <div class="form-group" style="margin:0;"><label>公開設定</label><select><option>公開</option><option>非公開</option><option>限定公開</option></select></div>
+
+        <!-- 動画タイプ選択 -->
+        <label style="font-size:13px;font-weight:700;color:var(--gray-dark);margin-bottom:10px;display:block;">動画タイプ</label>
+        <div class="radio-group" style="flex-direction:row;gap:8px;margin-bottom:16px;">
+          <div class="radio-opt selected" style="flex:1;" onclick="selectRadio(this);wizYtType('long')">
+            <div class="radio-dot"></div><div class="radio-label">長尺動画<br><span style="font-size:11px;color:var(--gray-light);">動画 + サムネイル</span></div>
+          </div>
+          <div class="radio-opt" style="flex:1;" onclick="selectRadio(this);wizYtType('short')">
+            <div class="radio-dot"></div><div class="radio-label">Short<br><span style="font-size:11px;color:var(--gray-light);">縦動画のみ・サムネイルなし</span></div>
+          </div>
         </div>
+
+        <div class="form-group" style="max-width:200px;">
+          <label>公開設定</label>
+          <select><option>公開</option><option>非公開</option><option>限定公開</option></select>
+        </div>
+
         <div class="divider"></div>
-        <label style="font-size:13px;font-weight:700;color:var(--gray-dark);margin-bottom:10px;display:block;">サムネイルモード</label>
+
+        <!-- サムネイル設定（長尺のみ） -->
+        <div id="wiz-yt-thumb">
+          <label style="font-size:13px;font-weight:700;color:var(--gray-dark);margin-bottom:10px;display:block;">🖼 サムネイルモード</label>
+          <div class="radio-group">
+            <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">既存画像そのまま（マッピング）</div></div>
+            <div class="radio-opt selected" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">全部生成</div></div>
+            <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">別SNSから流用（NOTEサムネイルなど）</div></div>
+            <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">なし（YouTube自動生成）</div></div>
+          </div>
+          <div class="sub-panel teal" style="margin-top:12px;">
+            <div class="form-group" style="margin:0;"><label>生成プロンプト</label>
+              <textarea placeholder="YouTubeサムネイルの生成プロンプト" style="min-height:50px;"></textarea>
+            </div>
+          </div>
+          <div class="divider"></div>
+        </div>
+
+        <!-- 動画設定 -->
+        <label style="font-size:13px;font-weight:700;color:var(--gray-dark);margin-bottom:10px;display:block;">🎬 動画モード</label>
         <div class="radio-group">
-          <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">既存画像そのまま（マッピング）</div></div>
-          <div class="radio-opt selected" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">全部生成</div></div>
-          <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">既存画像に文字だけ入れる</div></div>
-          <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">なし（YouTube自動生成）</div></div>
+          <div class="radio-opt selected" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">Veo3 — プロンプトから生成</div></div>
+          <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">Veo3 フレーム補間 — 開始・終了画像から生成</div></div>
+          <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">テロップ挿入 — 既存動画にテロップを合成</div></div>
         </div>
         <div class="sub-panel teal" style="margin-top:12px;">
-          <div class="form-group" style="margin:0;"><label>生成プロンプト</label>
-            <textarea placeholder="YouTubeサムネイルの生成プロンプト" style="min-height:50px;"></textarea>
+          <div class="form-group" style="margin-bottom:8px;"><label>プロンプト生成方式</label><select><option>投稿テキストから整形</option><option>一から自動生成</option></select></div>
+          <div class="form-group" style="margin-bottom:8px;"><label>動画プロンプト <span class="badge badge-opt">任意</span></label><textarea placeholder="省略時は自動生成" style="min-height:50px;"></textarea></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+            <div class="form-group" style="margin:0;"><label>動画長</label><select><option>8秒</option><option>16秒</option></select></div>
+            <div class="form-group" style="margin:0;"><label>比率</label><select><option>16:9</option><option>9:16</option><option>1:1</option></select></div>
+            <div class="form-group" style="margin:0;"><label>文字入れ</label><select><option>なし</option><option>タイトル自動挿入</option></select></div>
           </div>
         </div>
       </div>
@@ -389,59 +424,136 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
       <!-- PAGE 5: Instagram設定 -->
       <div class="tab-panel" id="ps-ig">
         <div class="section-tag tag-ig">Instagram</div>
+
+        <!-- 投稿タイプ -->
+        <label style="font-size:13px;font-weight:700;color:var(--gray-dark);margin-bottom:10px;display:block;">投稿タイプ</label>
+        <div class="radio-group" style="flex-direction:row;gap:8px;margin-bottom:16px;">
+          <div class="radio-opt selected" style="flex:1;" onclick="selectRadio(this);wizIgType('feed')">
+            <div class="radio-dot"></div><div class="radio-label">フィード<br><span style="font-size:11px;color:var(--gray-light);">画像最大5枚・動画スロット1枠</span></div>
+          </div>
+          <div class="radio-opt" style="flex:1;" onclick="selectRadio(this);wizIgType('reel')">
+            <div class="radio-dot"></div><div class="radio-label">リール<br><span style="font-size:11px;color:var(--gray-light);">動画のみ</span></div>
+          </div>
+        </div>
+
         <div class="form-group">
           <label>Instagram専用個別指示 <span class="badge badge-opt">任意</span></label>
           <textarea placeholder="Instagram投稿に特化した追加指示（ハッシュタグ、トーンなど）" style="min-height:60px;"></textarea>
         </div>
+
         <div class="divider"></div>
-        <label style="font-size:13px;font-weight:700;color:var(--gray-dark);margin-bottom:10px;display:block;">投稿画像ソース</label>
-        <div class="radio-group">
-          <div class="radio-opt selected" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">別SNSから流用（NOTEサムネイルなど）</div></div>
-          <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">独自生成</div></div>
-          <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">ライブラリ固定（マッピング）</div></div>
-          <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">なし</div></div>
-        </div>
-        <div class="sub-panel" style="margin-top:12px;">
-          <div class="two-col">
-            <div class="form-group" style="margin:0;"><label>流用元SNS</label><select><option>NOTEサムネイル（文字入れ後）</option><option>NOTEサムネイル（文字入れ前）</option><option>YouTubeサムネイル</option></select></div>
-            <div class="form-group" style="margin:0;"><label>バージョン</label><select><option>文字入れ後</option><option>文字入れ前（生画像）</option></select></div>
+
+        <!-- フィード設定 -->
+        <div id="wiz-ig-feed">
+          <label style="font-size:13px;font-weight:700;color:var(--gray-dark);margin-bottom:10px;display:block;">🖼 画像ソース（1枚目デフォルト）</label>
+          <div class="radio-group">
+            <div class="radio-opt selected" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">別SNSから流用（NOTEサムネイルなど）</div></div>
+            <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">独自生成</div></div>
+            <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">ライブラリ固定（マッピング）</div></div>
+            <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">なし</div></div>
           </div>
-          <p style="font-size:11px;color:var(--gray-light);margin-top:8px;padding:6px 10px;background:var(--white);border-radius:4px;border-left:3px solid var(--blue-mid);">NOTEサムネイル生成後に自動で取得。NOTEが未選択の場合は使用不可。</p>
+          <div class="sub-panel" style="margin-top:12px;">
+            <div class="two-col">
+              <div class="form-group" style="margin:0;"><label>流用元SNS</label><select><option>NOTEサムネイル（文字入れ後）</option><option>NOTEサムネイル（文字入れ前）</option><option>YouTubeサムネイル</option></select></div>
+              <div class="form-group" style="margin:0;"><label>バージョン</label><select><option>文字入れ後</option><option>文字入れ前（生画像）</option></select></div>
+            </div>
+          </div>
+          <p style="font-size:11px;color:var(--gray-light);margin-top:8px;padding:6px 10px;background:var(--blue-bg);border-radius:4px;border-left:3px solid var(--warning);">💡 スロット詳細・枚数・動画位置はスロット設定で変更できます</p>
+        </div>
+
+        <!-- リール設定 -->
+        <div id="wiz-ig-reel" style="display:none;">
+          <label style="font-size:13px;font-weight:700;color:var(--gray-dark);margin-bottom:10px;display:block;">🎬 動画モード</label>
+          <div class="radio-group">
+            <div class="radio-opt selected" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">Veo3 — プロンプトから生成</div></div>
+            <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">Veo3 フレーム補間</div></div>
+            <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">テロップ挿入</div></div>
+            <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">別SNSから流用（YouTube動画など）</div></div>
+          </div>
+          <div class="sub-panel teal" style="margin-top:12px;">
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+              <div class="form-group" style="margin:0;"><label>動画長</label><select><option>8秒</option><option>16秒</option></select></div>
+              <div class="form-group" style="margin:0;"><label>比率</label><select><option>9:16</option><option>1:1</option></select></div>
+              <div class="form-group" style="margin:0;"><label>文字入れ</label><select><option>なし</option><option>タイトル自動挿入</option></select></div>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- PAGE 6: X設定 -->
       <div class="tab-panel" id="ps-x">
         <div class="section-tag tag-x">X</div>
+
+        <!-- 投稿タイプ -->
+        <label style="font-size:13px;font-weight:700;color:var(--gray-dark);margin-bottom:10px;display:block;">投稿タイプ</label>
+        <div class="radio-group" style="flex-direction:row;gap:8px;margin-bottom:16px;">
+          <div class="radio-opt selected" style="flex:1;" onclick="selectRadio(this);wizXType('image')">
+            <div class="radio-dot"></div><div class="radio-label">画像モード<br><span style="font-size:11px;color:var(--gray-light);">最大4枚</span></div>
+          </div>
+          <div class="radio-opt" style="flex:1;" onclick="selectRadio(this);wizXType('video')">
+            <div class="radio-dot"></div><div class="radio-label">動画モード<br><span style="font-size:11px;color:var(--gray-light);">動画1枠のみ</span></div>
+          </div>
+        </div>
+
         <div class="form-group">
           <label>X専用個別指示 <span class="badge badge-opt">任意</span></label>
           <textarea placeholder="例：ハッシュタグを2〜3個つける。280字以内で端的に。" style="min-height:60px;"></textarea>
         </div>
         <div class="divider"></div>
-        <label style="font-size:13px;font-weight:700;color:var(--gray-dark);margin-bottom:10px;display:block;">投稿画像ソース</label>
-        <div class="radio-group">
-          <div class="radio-opt selected" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">別SNSから流用（NOTEサムネイルなど）</div></div>
-          <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">独自生成</div></div>
-          <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">ライブラリ固定（マッピング）</div></div>
-          <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">なし</div></div>
+
+        <!-- 画像モード -->
+        <div id="wiz-x-image">
+          <label style="font-size:13px;font-weight:700;color:var(--gray-dark);margin-bottom:10px;display:block;">🖼 画像ソース</label>
+          <div class="radio-group">
+            <div class="radio-opt selected" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">別SNSから流用（NOTEサムネイルなど）</div></div>
+            <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">独自生成</div></div>
+            <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">ライブラリ固定（マッピング）</div></div>
+            <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">なし</div></div>
+          </div>
+          <div class="form-group" style="margin-top:12px;"><label>画像枚数（1〜4）</label><input type="text" value="1" style="max-width:60px;"/></div>
         </div>
-        <div class="form-group" style="margin-top:16px;"><label>画像枚数（1〜4）</label><input type="text" value="1" style="max-width:60px;"/></div>
+
+        <!-- 動画モード -->
+        <div id="wiz-x-video" style="display:none;">
+          <label style="font-size:13px;font-weight:700;color:var(--gray-dark);margin-bottom:10px;display:block;">🎬 動画モード</label>
+          <div class="radio-group">
+            <div class="radio-opt selected" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">Veo3 — プロンプトから生成</div></div>
+            <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">Veo3 フレーム補間</div></div>
+            <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">テロップ挿入</div></div>
+            <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">別SNSから流用</div></div>
+          </div>
+          <div class="sub-panel teal" style="margin-top:12px;">
+            <div class="two-col"><div class="form-group" style="margin:0;"><label>動画長</label><select><option>8秒</option><option>16秒</option></select></div><div class="form-group" style="margin:0;"><label>比率</label><select><option>16:9</option><option>9:16</option></select></div></div>
+          </div>
+        </div>
       </div>
 
       <!-- PAGE 7: TikTok設定 -->
       <div class="tab-panel" id="ps-tt">
         <div class="section-tag tag-tt">TikTok</div>
+
         <div class="form-group">
           <label>TikTok専用個別指示 <span class="badge badge-opt">任意</span></label>
           <textarea placeholder="例：トレンドのハッシュタグを多めに入れる" style="min-height:60px;"></textarea>
         </div>
         <div class="divider"></div>
-        <label style="font-size:13px;font-weight:700;color:var(--gray-dark);margin-bottom:10px;display:block;">投稿タイプ</label>
+
+        <!-- 動画のみ（TikTokは動画スロットのみ） -->
+        <label style="font-size:13px;font-weight:700;color:var(--gray-dark);margin-bottom:10px;display:block;">🎬 動画モード</label>
         <div class="radio-group">
-          <div class="radio-opt selected" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">動画（最大60秒）</div></div>
-          <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">写真（最大4枚）</div></div>
+          <div class="radio-opt selected" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">Veo3 — プロンプトから生成</div></div>
+          <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">Veo3 フレーム補間 — 開始・終了画像から生成</div></div>
+          <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">テロップ挿入 — 既存動画にテロップを合成</div></div>
+          <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">別SNSから流用（YouTube動画など）</div></div>
         </div>
-        <div class="form-group" style="margin-top:16px;"><label>動画向き</label><select style="max-width:200px;"><option>縦（9:16）</option><option>横（16:9）→ 縦に自動変換</option></select></div>
+        <div class="sub-panel teal" style="margin-top:12px;">
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+            <div class="form-group" style="margin:0;"><label>動画長</label><select><option>8秒</option><option>16秒</option></select></div>
+            <div class="form-group" style="margin:0;"><label>比率</label><select><option>9:16</option><option>1:1</option></select></div>
+            <div class="form-group" style="margin:0;"><label>文字入れ</label><select><option>なし</option><option>タイトル自動挿入</option></select></div>
+          </div>
+        </div>
+        <p style="font-size:11px;color:var(--gray-light);margin-top:10px;padding:6px 10px;background:var(--blue-bg);border-radius:4px;border-left:3px solid var(--blue-mid);">TikTokは動画スロット1枠のみ対応（画像投稿なし）</p>
       </div>
 
       <!-- PAGE 8: 動画生成設定 -->
@@ -1096,7 +1208,7 @@ function selCredOpt(el) {
   el.classList.add('active');
 }
 
-// ===== 投稿タイプ切替 =====
+// ===== 投稿タイプ切替（スロットモーダル） =====
 function switchYtType(type) {
   document.getElementById('yt-thumb-section').style.display = type==='long' ? '' : 'none';
 }
@@ -1107,6 +1219,18 @@ function switchIgType(type) {
 function switchXType(type) {
   document.getElementById('x-image-section').style.display = type==='image' ? '' : 'none';
   document.getElementById('x-video-section').style.display = type==='video' ? '' : 'none';
+}
+// ===== 投稿タイプ切替（ウィザード） =====
+function wizYtType(type) {
+  document.getElementById('wiz-yt-thumb').style.display = type==='long' ? '' : 'none';
+}
+function wizIgType(type) {
+  document.getElementById('wiz-ig-feed').style.display = type==='feed' ? '' : 'none';
+  document.getElementById('wiz-ig-reel').style.display = type==='reel' ? '' : 'none';
+}
+function wizXType(type) {
+  document.getElementById('wiz-x-image').style.display = type==='image' ? '' : 'none';
+  document.getElementById('wiz-x-video').style.display = type==='video' ? '' : 'none';
 }
 
 // ===== 画像スロット =====
