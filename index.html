@@ -563,79 +563,82 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         <div style="padding:16px 18px;">
           <div class="section-tag tag-ig">Instagram</div>
 
-          <div class="slot-card">
-            <div class="slot-header">
-              <div class="slot-num">1</div>
-              <div class="slot-label">1枚目（カバー）</div>
-            </div>
-            <div class="slot-body">
-              <div class="src-tabs">
-                <div class="src-tab">なし</div>
-                <div class="src-tab active">別SNSから流用</div>
-                <div class="src-tab">生成</div>
-                <div class="src-tab">ライブラリ固定</div>
+          <div id="ig-slots">
+            <div class="slot-card">
+              <div class="slot-header"><div class="slot-num">1</div><div class="slot-label">1枚目（カバー）</div></div>
+              <div class="slot-body">
+                <div class="src-tabs">
+                  <div class="src-tab" onclick="setTab(this,'none')">なし</div>
+                  <div class="src-tab active" onclick="setTab(this,'ref')">別SNSから流用</div>
+                  <div class="src-tab" onclick="setTab(this,'gen')">生成</div>
+                  <div class="src-tab" onclick="setTab(this,'lib')">ライブラリ固定</div>
+                </div>
+                <div class="src-detail" data-mode="none" style="display:none;"></div>
+                <div class="src-detail" data-mode="ref" style="display:block;">
+                  <div class="sub-panel"><div class="two-col">
+                    <div class="form-group" style="margin:0;"><label>流用元SNS</label><select><option>NOTE サムネイル</option><option>YouTube サムネイル</option></select></div>
+                    <div class="form-group" style="margin:0;"><label>バージョン</label><select><option>文字入れ後</option><option>文字入れ前（生画像）</option></select></div>
+                  </div></div>
+                </div>
+                <div class="src-detail" data-mode="gen" style="display:none;">
+                  <div class="sub-panel teal"><div class="form-group" style="margin-bottom:8px;"><label>生成プロンプト</label><textarea placeholder="1枚目用プロンプト" style="min-height:50px;"></textarea></div><div class="form-group" style="margin:0;"><label>文字入れ</label><select><option>タイトルを自動挿入</option><option>なし</option></select></div></div>
+                </div>
+                <div class="src-detail" data-mode="lib" style="display:none;"><div class="sub-panel amber"><label style="font-size:12px;font-weight:600;margin-bottom:6px;display:block;">キーマッピング</label><div style="display:flex;gap:8px;align-items:center;"><input type="text" placeholder="キー" style="flex:1;"/><span style="color:var(--gray-light);">=</span><div style="flex:2;background:var(--white);border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--gray-light);cursor:pointer;">📎 ファイルを選択...</div></div></div></div>
               </div>
-              <div class="sub-panel">
-                <div class="two-col">
-                  <div class="form-group" style="margin:0;"><label>流用元SNS</label><select><option>NOTE サムネイル</option><option>YouTube サムネイル</option></select></div>
-                  <div class="form-group" style="margin:0;"><label>バージョン</label><select><option>文字入れ後</option><option>文字入れ前（生画像）</option></select></div>
+            </div>
+
+            <div class="slot-card">
+              <div class="slot-header"><div class="slot-num">2</div><div class="slot-label">2枚目</div><div class="slot-remove" onclick="removeSlot(this)">×</div></div>
+              <div class="slot-body">
+                <div class="src-tabs">
+                  <div class="src-tab" onclick="setTab(this,'none')">なし</div>
+                  <div class="src-tab" onclick="setTab(this,'ref')">別SNSから流用</div>
+                  <div class="src-tab active teal" onclick="setTab(this,'gen')">生成</div>
+                  <div class="src-tab" onclick="setTab(this,'lib')">ライブラリ固定</div>
+                </div>
+                <div class="src-detail" data-mode="none" style="display:none;"></div>
+                <div class="src-detail" data-mode="ref" style="display:none;"><div class="sub-panel"><div class="two-col"><div class="form-group" style="margin:0;"><label>流用元SNS</label><select><option>NOTE サムネイル</option><option>YouTube サムネイル</option></select></div><div class="form-group" style="margin:0;"><label>バージョン</label><select><option>文字入れ後</option><option>文字入れ前</option></select></div></div></div></div>
+                <div class="src-detail" data-mode="gen" style="display:block;">
+                  <div class="sub-panel teal"><div class="form-group" style="margin-bottom:8px;"><label>生成プロンプト</label><textarea placeholder="2枚目用のプロンプト（省略時はベースプロンプト使用）" style="min-height:50px;"></textarea></div><div class="form-group" style="margin:0;"><label>文字入れ</label><select><option>なし</option><option>タイトルを自動挿入</option><option>カスタムテキスト</option></select></div></div>
+                </div>
+                <div class="src-detail" data-mode="lib" style="display:none;"><div class="sub-panel amber"><label style="font-size:12px;font-weight:600;margin-bottom:6px;display:block;">キーマッピング</label><div style="display:flex;gap:8px;align-items:center;"><input type="text" placeholder="キー" style="flex:1;"/><span style="color:var(--gray-light);">=</span><div style="flex:2;background:var(--white);border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--gray-light);cursor:pointer;">📎 ファイルを選択...</div></div></div></div>
+              </div>
+            </div>
+
+            <div class="slot-card">
+              <div class="slot-header"><div class="slot-num">3</div><div class="slot-label">3枚目</div><div class="slot-remove" onclick="removeSlot(this)">×</div></div>
+              <div class="slot-body">
+                <div class="src-tabs">
+                  <div class="src-tab" onclick="setTab(this,'none')">なし</div>
+                  <div class="src-tab" onclick="setTab(this,'ref')">別SNSから流用</div>
+                  <div class="src-tab" onclick="setTab(this,'gen')">生成</div>
+                  <div class="src-tab active amber" onclick="setTab(this,'lib')">ライブラリ固定</div>
+                </div>
+                <div class="src-detail" data-mode="none" style="display:none;"></div>
+                <div class="src-detail" data-mode="ref" style="display:none;"></div>
+                <div class="src-detail" data-mode="gen" style="display:none;"></div>
+                <div class="src-detail" data-mode="lib" style="display:block;">
+                  <div class="sub-panel amber">
+                    <label style="font-size:12px;font-weight:600;color:var(--gray-dark);margin-bottom:8px;display:block;">キーマッピング</label>
+                    <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
+                      <input type="text" value="締めスライド" style="flex:1;"/>
+                      <span style="color:var(--gray-light);">=</span>
+                      <div style="flex:2;background:var(--white);border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--teal);cursor:pointer;">📎 ending_card.png</div>
+                      <div style="width:24px;height:24px;background:#fff0f0;border:1px solid var(--danger);color:var(--danger);border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;" onclick="this.closest('.slot-card')&&this.parentElement.parentElement.querySelector('input').value&&(this.parentElement.remove())">×</div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="slot-card">
-            <div class="slot-header">
-              <div class="slot-num">2</div>
-              <div class="slot-label">2枚目</div>
-              <div class="slot-remove">×</div>
-            </div>
-            <div class="slot-body">
-              <div class="src-tabs">
-                <div class="src-tab">なし</div>
-                <div class="src-tab">別SNSから流用</div>
-                <div class="src-tab active teal">生成</div>
-                <div class="src-tab">ライブラリ固定</div>
-              </div>
-              <div class="sub-panel teal">
-                <div class="form-group" style="margin-bottom:8px;"><label>生成プロンプト</label><textarea placeholder="2枚目用のプロンプト（省略時はベースプロンプト使用）" style="min-height:50px;"></textarea></div>
-                <div class="form-group" style="margin:0;"><label>文字入れ</label><select><option>なし</option><option>タイトルを自動挿入</option><option>カスタムテキスト</option></select></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="slot-card">
-            <div class="slot-header">
-              <div class="slot-num">3</div>
-              <div class="slot-label">3枚目</div>
-              <div class="slot-remove">×</div>
-            </div>
-            <div class="slot-body">
-              <div class="src-tabs">
-                <div class="src-tab">なし</div>
-                <div class="src-tab">別SNSから流用</div>
-                <div class="src-tab">生成</div>
-                <div class="src-tab active amber">ライブラリ固定</div>
-              </div>
-              <div class="sub-panel amber">
-                <label style="font-size:12px;font-weight:600;color:var(--gray-dark);margin-bottom:8px;display:block;">キーマッピング</label>
-                <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
-                  <input type="text" value="締めスライド" style="flex:1;"/>
-                  <span style="color:var(--gray-light);">=</span>
-                  <div style="flex:2;background:var(--white);border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--teal);cursor:pointer;">📎 ending_card.png</div>
-                  <div style="width:24px;height:24px;background:#fff0f0;border:1px solid var(--danger);color:var(--danger);border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;">×</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="add-slot-btn">
+          <div class="add-slot-btn" onclick="addSlot('ig-slots','ig',10)">
             <span style="font-size:18px;">+</span> 枚を追加（最大10枚）
           </div>
 
           <div class="divider"></div>
           <label style="font-size:12px;font-weight:600;color:var(--gray-dark);margin-bottom:8px;display:block;">スロット構成プレビュー</label>
-          <div class="preview-strip">
+          <div class="preview-strip" id="ig-preview">
             <div class="preview-cell">1枚目<br>カバー<div class="badge badge-ref">流</div></div>
             <div class="preview-cell">2枚目<div class="badge badge-gen">生</div></div>
             <div class="preview-cell">3枚目<div class="badge badge-lib">固</div></div>
@@ -658,30 +661,31 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         </div>
         <div style="padding:16px 18px;">
           <div class="section-tag tag-x">X</div>
-          <div class="slot-card">
-            <div class="slot-header">
-              <div class="slot-num">1</div>
-              <div class="slot-label">1枚目</div>
-            </div>
-            <div class="slot-body">
-              <div class="src-tabs">
-                <div class="src-tab">なし</div>
-                <div class="src-tab active">別SNSから流用</div>
-                <div class="src-tab">生成</div>
-                <div class="src-tab">ライブラリ固定</div>
-              </div>
-              <div class="sub-panel">
-                <div class="two-col">
-                  <div class="form-group" style="margin:0;"><label>流用元SNS</label><select><option>NOTE サムネイル</option><option>YouTube サムネイル</option><option>Instagram 1枚目</option></select></div>
-                  <div class="form-group" style="margin:0;"><label>バージョン</label><select><option>文字入れ後</option><option>文字入れ前（生画像）</option></select></div>
+          <div id="x-slots">
+            <div class="slot-card">
+              <div class="slot-header"><div class="slot-num">1</div><div class="slot-label">1枚目</div></div>
+              <div class="slot-body">
+                <div class="src-tabs">
+                  <div class="src-tab" onclick="setTab(this,'none')">なし</div>
+                  <div class="src-tab active" onclick="setTab(this,'ref')">別SNSから流用</div>
+                  <div class="src-tab" onclick="setTab(this,'gen')">生成</div>
+                  <div class="src-tab" onclick="setTab(this,'lib')">ライブラリ固定</div>
                 </div>
+                <div class="src-detail" data-mode="none" style="display:none;"></div>
+                <div class="src-detail" data-mode="ref" style="display:block;">
+                  <div class="sub-panel"><div class="two-col">
+                    <div class="form-group" style="margin:0;"><label>流用元SNS</label><select><option>NOTE サムネイル</option><option>YouTube サムネイル</option><option>Instagram 1枚目</option></select></div>
+                    <div class="form-group" style="margin:0;"><label>バージョン</label><select><option>文字入れ後</option><option>文字入れ前（生画像）</option></select></div>
+                  </div></div>
+                </div>
+                <div class="src-detail" data-mode="gen" style="display:none;"><div class="sub-panel teal"><div class="form-group" style="margin:0;"><label>生成プロンプト</label><textarea placeholder="X投稿用の画像プロンプト..." style="min-height:50px;"></textarea></div></div></div>
+                <div class="src-detail" data-mode="lib" style="display:none;"><div class="sub-panel amber"><label style="font-size:12px;font-weight:600;margin-bottom:6px;display:block;">キーマッピング</label><div style="display:flex;gap:8px;align-items:center;"><input type="text" placeholder="キー" style="flex:1;"/><span style="color:var(--gray-light);">=</span><div style="flex:2;background:var(--white);border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--gray-light);cursor:pointer;">📎 ファイルを選択...</div></div></div></div>
               </div>
             </div>
           </div>
-          <div class="add-slot-btn"><span style="font-size:18px;">+</span> 枚を追加（最大4枚）</div>
+          <div class="add-slot-btn" onclick="addSlot('x-slots','x',4)"><span style="font-size:18px;">+</span> 枚を追加（最大4枚）</div>
           <div class="divider"></div>
-          <label style="font-size:12px;font-weight:600;color:var(--gray-dark);margin-bottom:8px;display:block;">スロット構成プレビュー</label>
-          <div class="preview-strip">
+          <div class="preview-strip" id="x-preview">
             <div class="preview-cell">1枚目<div class="badge badge-ref">流</div></div>
             <div class="preview-cell" style="border-style:dashed;opacity:.5;font-size:18px;">+</div>
           </div>
@@ -697,30 +701,31 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         </div>
         <div style="padding:16px 18px;">
           <div class="section-tag tag-tt">TikTok</div>
-          <div class="slot-card">
-            <div class="slot-header">
-              <div class="slot-num">1</div>
-              <div class="slot-label">1枚目</div>
-            </div>
-            <div class="slot-body">
-              <div class="src-tabs">
-                <div class="src-tab">なし</div>
-                <div class="src-tab active">別SNSから流用</div>
-                <div class="src-tab">生成</div>
-                <div class="src-tab">ライブラリ固定</div>
-              </div>
-              <div class="sub-panel">
-                <div class="two-col">
-                  <div class="form-group" style="margin:0;"><label>流用元SNS</label><select><option>NOTE サムネイル</option><option>YouTube サムネイル</option><option>Instagram 1枚目</option></select></div>
-                  <div class="form-group" style="margin:0;"><label>バージョン</label><select><option>文字入れ後</option><option>文字入れ前（生画像）</option></select></div>
+          <div id="tt-slots">
+            <div class="slot-card">
+              <div class="slot-header"><div class="slot-num">1</div><div class="slot-label">1枚目</div></div>
+              <div class="slot-body">
+                <div class="src-tabs">
+                  <div class="src-tab" onclick="setTab(this,'none')">なし</div>
+                  <div class="src-tab active" onclick="setTab(this,'ref')">別SNSから流用</div>
+                  <div class="src-tab" onclick="setTab(this,'gen')">生成</div>
+                  <div class="src-tab" onclick="setTab(this,'lib')">ライブラリ固定</div>
                 </div>
+                <div class="src-detail" data-mode="none" style="display:none;"></div>
+                <div class="src-detail" data-mode="ref" style="display:block;">
+                  <div class="sub-panel"><div class="two-col">
+                    <div class="form-group" style="margin:0;"><label>流用元SNS</label><select><option>NOTE サムネイル</option><option>YouTube サムネイル</option><option>Instagram 1枚目</option></select></div>
+                    <div class="form-group" style="margin:0;"><label>バージョン</label><select><option>文字入れ後</option><option>文字入れ前（生画像）</option></select></div>
+                  </div></div>
+                </div>
+                <div class="src-detail" data-mode="gen" style="display:none;"><div class="sub-panel teal"><div class="form-group" style="margin:0;"><label>生成プロンプト</label><textarea placeholder="TikTok投稿用の画像プロンプト..." style="min-height:50px;"></textarea></div></div></div>
+                <div class="src-detail" data-mode="lib" style="display:none;"><div class="sub-panel amber"><label style="font-size:12px;font-weight:600;margin-bottom:6px;display:block;">キーマッピング</label><div style="display:flex;gap:8px;align-items:center;"><input type="text" placeholder="キー" style="flex:1;"/><span style="color:var(--gray-light);">=</span><div style="flex:2;background:var(--white);border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--gray-light);cursor:pointer;">📎 ファイルを選択...</div></div></div></div>
               </div>
             </div>
           </div>
-          <div class="add-slot-btn"><span style="font-size:18px;">+</span> 枚を追加（最大4枚）</div>
+          <div class="add-slot-btn" onclick="addSlot('tt-slots','tt',4)"><span style="font-size:18px;">+</span> 枚を追加（最大4枚）</div>
           <div class="divider"></div>
-          <label style="font-size:12px;font-weight:600;color:var(--gray-dark);margin-bottom:8px;display:block;">スロット構成プレビュー</label>
-          <div class="preview-strip">
+          <div class="preview-strip" id="tt-preview">
             <div class="preview-cell">1枚目<div class="badge badge-ref">流</div></div>
             <div class="preview-cell" style="border-style:dashed;opacity:.5;font-size:18px;">+</div>
           </div>
@@ -981,6 +986,82 @@ function selCredOpt(el) {
   el.closest('.cred-toggle').querySelectorAll('.cred-opt').forEach(function(o){ o.classList.remove('active'); });
   el.classList.add('active');
 }
+
+// ===== 画像スロット =====
+function setTab(el, mode) {
+  var slotBody = el.closest('.slot-body');
+  // タブ切替
+  el.closest('.src-tabs').querySelectorAll('.src-tab').forEach(function(t){
+    t.classList.remove('active','teal','amber');
+  });
+  el.classList.add('active');
+  if(mode==='gen') el.classList.add('teal');
+  if(mode==='lib') el.classList.add('amber');
+  // パネル切替
+  slotBody.querySelectorAll('.src-detail').forEach(function(d){ d.classList.remove('show'); });
+  var target = slotBody.querySelector('.src-detail[data-mode="'+mode+'"]');
+  if(target) target.classList.add('show');
+}
+
+function removeSlot(btn) { btn.closest('.slot-card').remove(); }
+
+var slotCounters = {};
+function addSlot(containerId, sns, max) {
+  var container = document.getElementById(containerId);
+  if(!container) return;
+  var current = container.querySelectorAll('.slot-card').length;
+  if(current >= max){ alert('最大'+max+'枚まで設定できます'); return; }
+  slotCounters[containerId] = (slotCounters[containerId]||0)+1;
+  var uid = containerId + '_' + slotCounters[containerId];
+  var n = current+1;
+  var div = document.createElement('div');
+  div.className = 'slot-card';
+  div.innerHTML = '<div class="slot-header">'
+    +'<div class="slot-num">'+n+'</div>'
+    +'<div class="slot-label">'+n+'枚目</div>'
+    +'<div class="slot-remove" onclick="removeSlot(this)">×</div>'
+    +'</div>'
+    +'<div class="slot-body">'
+    +'<div class="src-tabs">'
+    +'<div class="src-tab active" onclick="setTab(this,\'none\')">なし</div>'
+    +'<div class="src-tab" onclick="setTab(this,\'ref\')">別SNSから流用</div>'
+    +'<div class="src-tab" onclick="setTab(this,\'gen\')">生成</div>'
+    +'<div class="src-tab" onclick="setTab(this,\'lib\')">ライブラリ固定</div>'
+    +'</div>'
+    +'<div class="src-detail" data-mode="none" style="display:block;"></div>'
+    +'<div class="src-detail" data-mode="ref" style="display:none;"><div class="sub-panel"><div class="two-col">'
+    +'<div class="form-group" style="margin:0"><label>流用元SNS</label><select><option>NOTEサムネイル</option><option>YouTubeサムネイル</option><option>Instagram 1枚目</option></select></div>'
+    +'<div class="form-group" style="margin:0"><label>バージョン</label><select><option>文字入れ後</option><option>文字入れ前（生画像）</option></select></div>'
+    +'</div></div></div>'
+    +'<div class="src-detail" data-mode="gen" style="display:none;"><div class="sub-panel teal">'
+    +'<div class="form-group" style="margin-bottom:8px"><label>生成プロンプト</label><textarea placeholder="このスロット専用プロンプト（省略時はベース使用）" style="min-height:50px;"></textarea></div>'
+    +'<div class="form-group" style="margin:0"><label>文字入れ</label><select><option>なし</option><option>タイトルを自動挿入</option><option>カスタムテキスト</option></select></div>'
+    +'</div></div>'
+    +'<div class="src-detail" data-mode="lib" style="display:none;"><div class="sub-panel amber">'
+    +'<label style="font-size:12px;font-weight:600;margin-bottom:8px;display:block;">キーマッピング</label>'
+    +'<div style="display:flex;gap:8px;align-items:center;">'
+    +'<input type="text" placeholder="キー" style="flex:1"/>'
+    +'<span style="color:var(--gray-light);">=</span>'
+    +'<div style="flex:2;background:var(--white);border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--gray-light);cursor:pointer;">📎 ファイルを選択...</div>'
+    +'<div style="width:24px;height:24px;background:#fff0f0;border:1px solid var(--danger);color:var(--danger);border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;">×</div>'
+    +'</div></div></div>'
+    +'</div>';
+  container.appendChild(div);
+}
+
+// 既存スロットのsrc-tabにもsetTabを適用（静的HTML用）
+document.addEventListener('DOMContentLoaded', function(){
+  document.querySelectorAll('.src-tabs .src-tab').forEach(function(tab){
+    if(!tab.getAttribute('onclick')){
+      tab.addEventListener('click', function(){
+        var modes = ['なし','none','別SNSから流用','ref','生成','gen','ライブラリ固定','lib'];
+        var text = tab.textContent.trim();
+        var modeMap = {'なし':'none','別SNSから流用':'ref','生成':'gen','ライブラリ固定':'lib'};
+        setTab(tab, modeMap[text]||'none');
+      });
+    }
+  });
+});
 </script>
 </body>
 </html>
