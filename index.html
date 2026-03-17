@@ -177,6 +177,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .hidden{display:none;}
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .divider{height:1px;background:var(--border);margin:16px 0;}
+/* スロットセクション */
+.sns-slot-section{border:1px solid var(--border);border-radius:10px;margin-bottom:16px;overflow:hidden;}
+.sns-slot-header{display:flex;align-items:center;gap:10px;padding:14px 18px;background:var(--blue-bg);border-bottom:1px solid var(--border);}
+.sns-slot-body{padding:16px 18px;}
 </style>
 </head>
 <body>
@@ -508,50 +512,60 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 </div>
 
 
-<!-- ===== モーダル: 画像スロット設定 ===== -->
+<!-- ===== モーダル: 画像・動画スロット設定 ===== -->
 <div id="slotsModal" class="modal">
-  <div class="modal-content">
+  <div class="modal-content" style="max-width:900px;">
     <div class="modal-header">
-      <h2>SNS画像スロット設定</h2>
+      <h2>画像・動画スロット設定</h2>
       <button class="close-btn" onclick="closeSlotsModal()">&times;</button>
     </div>
     <div class="modal-body">
 
       <!-- NOTE -->
-      <div style="border:1px solid var(--border);border-radius:10px;margin-bottom:16px;overflow:hidden;">
-        <div style="display:flex;align-items:center;gap:10px;padding:14px 18px;background:var(--blue-bg);border-bottom:1px solid var(--border);">
-          <div style="width:28px;height:28px;border-radius:6px;background:#000;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;">N</div>
-          <div style="font-size:14px;font-weight:600;">NOTE</div>
-          <div style="font-size:11px;color:var(--gray-light);margin-left:auto;">サムネイル 1枚固定</div>
+      <div class="sns-slot-section">
+        <div class="sns-slot-header">
+          <div style="width:28px;height:28px;border-radius:6px;background:#000;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">N</div>
+          <div style="font-size:14px;font-weight:700;">NOTE</div>
+          <div style="font-size:11px;color:var(--gray-light);margin-left:auto;">サムネイル 1枚固定・動画なし</div>
         </div>
-        <div style="padding:16px 18px;">
+        <div class="sns-slot-body">
           <div class="section-tag tag-note">NOTE</div>
           <div class="slot-card">
             <div class="slot-header"><div class="slot-num">1</div><div class="slot-label">サムネイル（固定）</div></div>
             <div class="slot-body">
               <div class="src-tabs">
                 <div class="src-tab" onclick="setTab(this,'none')">なし</div>
-                <div class="src-tab" onclick="setTab(this,'ref')">別SNSから流用</div>
                 <div class="src-tab active teal" onclick="setTab(this,'gen')">生成</div>
+                <div class="src-tab" onclick="setTab(this,'ref')">別SNSから流用</div>
                 <div class="src-tab" onclick="setTab(this,'lib')">ライブラリ固定</div>
               </div>
               <div class="src-detail" data-mode="none" style="display:none;"></div>
+              <div class="src-detail" data-mode="gen" style="display:block;">
+                <div class="sub-panel teal">
+                  <div class="form-group" style="margin-bottom:8px;"><label>生成プロンプト</label><textarea style="min-height:50px;" placeholder="省略時はベースプロンプトから自動生成">金融・投資テーマの洗練されたサムネイル。グラフや数字を取り入れたデザイン。</textarea></div>
+                  <div class="toggle-row" style="padding:8px 0;border:none;">
+                    <div><div class="toggle-label" style="font-size:13px;">文字入れ</div></div>
+                    <div class="toggle" onclick="this.classList.toggle('on');togglePanel('note-text-panel',this.classList.contains('on'))"></div>
+                  </div>
+                  <div id="note-text-panel" style="display:none;">
+                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px;">
+                      <div class="form-group" style="margin:0;"><label>テキスト内容</label><input type="text" value="{{title}}"/></div>
+                      <div class="form-group" style="margin:0;"><label>位置</label><select><option>中央</option><option>上部</option><option>下部</option></select></div>
+                      <div class="form-group" style="margin:0;"><label>フォントサイズ</label><input type="text" value="48px"/></div>
+                    </div>
+                  </div>
+                </div>
+                <p style="font-size:11px;color:var(--gray-light);margin-top:8px;padding:6px 10px;background:var(--blue-bg);border-radius:4px;border-left:3px solid var(--blue-mid);">生成後「_raw（文字入れ前）」と「_with_text（文字入れ後）」の両方を保存 → 後続SNSから参照可能</p>
+              </div>
               <div class="src-detail" data-mode="ref" style="display:none;">
                 <div class="sub-panel"><div class="two-col">
                   <div class="form-group" style="margin:0;"><label>流用元SNS</label><select><option>YouTube サムネイル</option></select></div>
                   <div class="form-group" style="margin:0;"><label>バージョン</label><select><option>文字入れ後</option><option>文字入れ前（生画像）</option></select></div>
                 </div></div>
-                <p style="font-size:11px;color:var(--gray-light);margin-top:6px;padding:6px 10px;background:var(--blue-bg);border-radius:4px;border-left:3px solid var(--warning);">⚠️ NOTE → YouTube の流用は逆順。YouTubeが先に生成された場合のみ利用可</p>
-              </div>
-              <div class="src-detail" data-mode="gen" style="display:block;">
-                <div class="sub-panel teal">
-                  <div class="form-group" style="margin-bottom:10px;"><label>生成プロンプト</label><textarea style="min-height:50px;">金融・投資テーマの洗練されたサムネイル。グラフや数字を取り入れたデザイン。</textarea></div>
-                  <div class="form-group" style="margin:0;"><label>文字入れ</label><select><option>タイトルを自動挿入</option><option>なし（画像のみ）</option><option>カスタムテキスト</option></select></div>
-                </div>
-                <p style="font-size:11px;color:var(--gray-light);margin-top:8px;padding:6px 10px;background:var(--blue-bg);border-radius:4px;border-left:3px solid var(--blue-mid);">生成後「文字入れ前（_raw）」と「文字入れ後（_with_text）」の両方を保存 → 後続SNSから参照可能</p>
               </div>
               <div class="src-detail" data-mode="lib" style="display:none;">
-                <div class="sub-panel amber"><label style="font-size:12px;font-weight:600;margin-bottom:6px;display:block;">キーマッピング</label>
+                <div class="sub-panel amber">
+                  <label style="font-size:12px;font-weight:600;margin-bottom:6px;display:block;">キーマッピング</label>
                   <div style="display:flex;gap:8px;align-items:center;"><input type="text" placeholder="キー（例: 第1話）" style="flex:1;"/><span style="color:var(--gray-light);">=</span><div style="flex:2;background:var(--white);border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--gray-light);cursor:pointer;">📎 ファイルを選択...</div></div>
                 </div>
               </div>
@@ -560,259 +574,299 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         </div>
       </div>
 
-      <!-- Instagram -->
-      <div style="border:1px solid var(--border);border-radius:10px;margin-bottom:16px;overflow:hidden;">
-        <div style="display:flex;align-items:center;gap:10px;padding:14px 18px;background:var(--blue-bg);border-bottom:1px solid var(--border);">
-          <div style="width:28px;height:28px;border-radius:6px;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);display:flex;align-items:center;justify-content:center;">📸</div>
-          <div style="font-size:14px;font-weight:600;">Instagram</div>
-          <div style="font-size:11px;color:var(--gray-light);margin-left:auto;">最大10枚（カルーセル）</div>
+      <!-- YouTube -->
+      <div class="sns-slot-section">
+        <div class="sns-slot-header">
+          <div style="width:28px;height:28px;border-radius:6px;background:#ff0000;display:flex;align-items:center;justify-content:center;flex-shrink:0;">▶️</div>
+          <div style="font-size:14px;font-weight:700;">YouTube</div>
+          <div style="font-size:11px;color:var(--gray-light);margin-left:auto;">投稿タイプによりスロット変化</div>
         </div>
-        <div style="padding:16px 18px;">
-          <div class="section-tag tag-ig">Instagram</div>
-
-          <div id="ig-slots">
-            <div class="slot-card">
-              <div class="slot-header"><div class="slot-num">1</div><div class="slot-label">1枚目（カバー）</div></div>
-              <div class="slot-body">
-                <div class="src-tabs">
-                  <div class="src-tab" onclick="setTab(this,'none')">なし</div>
-                  <div class="src-tab active" onclick="setTab(this,'ref')">別SNSから流用</div>
-                  <div class="src-tab" onclick="setTab(this,'gen')">生成</div>
-                  <div class="src-tab" onclick="setTab(this,'lib')">ライブラリ固定</div>
-                </div>
-                <div class="src-detail" data-mode="none" style="display:none;"></div>
-                <div class="src-detail" data-mode="ref" style="display:block;">
-                  <div class="sub-panel"><div class="two-col">
-                    <div class="form-group" style="margin:0;"><label>流用元SNS</label><select><option>NOTE サムネイル</option><option>YouTube サムネイル</option></select></div>
-                    <div class="form-group" style="margin:0;"><label>バージョン</label><select><option>文字入れ後</option><option>文字入れ前（生画像）</option></select></div>
-                  </div></div>
-                </div>
-                <div class="src-detail" data-mode="gen" style="display:none;">
-                  <div class="sub-panel teal"><div class="form-group" style="margin-bottom:8px;"><label>生成プロンプト</label><textarea placeholder="1枚目用プロンプト" style="min-height:50px;"></textarea></div><div class="form-group" style="margin:0;"><label>文字入れ</label><select><option>タイトルを自動挿入</option><option>なし</option></select></div></div>
-                </div>
-                <div class="src-detail" data-mode="lib" style="display:none;"><div class="sub-panel amber"><label style="font-size:12px;font-weight:600;margin-bottom:6px;display:block;">キーマッピング</label><div style="display:flex;gap:8px;align-items:center;"><input type="text" placeholder="キー" style="flex:1;"/><span style="color:var(--gray-light);">=</span><div style="flex:2;background:var(--white);border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--gray-light);cursor:pointer;">📎 ファイルを選択...</div></div></div></div>
-              </div>
+        <div class="sns-slot-body">
+          <div class="section-tag tag-yt">YouTube</div>
+          <div style="margin-bottom:14px;">
+            <label style="font-size:12px;font-weight:700;color:var(--gray-dark);margin-bottom:8px;display:block;">動画タイプ</label>
+            <div class="radio-group" style="flex-direction:row;gap:8px;">
+              <div class="radio-opt selected" style="flex:1;" onclick="selectRadio(this);switchYtType('long')"><div class="radio-dot"></div><div class="radio-label">長尺動画（サムネイル+動画）</div></div>
+              <div class="radio-opt" style="flex:1;" onclick="selectRadio(this);switchYtType('short')"><div class="radio-dot"></div><div class="radio-label">Short（動画のみ）</div></div>
             </div>
-
+          </div>
+          <!-- 長尺: サムネイル -->
+          <div id="yt-thumb-section">
+            <div style="font-size:12px;font-weight:700;color:var(--gray);margin-bottom:8px;">🖼 サムネイル（長尺のみ）</div>
             <div class="slot-card">
-              <div class="slot-header"><div class="slot-num">2</div><div class="slot-label">2枚目</div><div class="slot-remove" onclick="removeSlot(this)">×</div></div>
+              <div class="slot-header"><div class="slot-num">1</div><div class="slot-label">サムネイル（固定）</div></div>
               <div class="slot-body">
                 <div class="src-tabs">
                   <div class="src-tab" onclick="setTab(this,'none')">なし</div>
-                  <div class="src-tab" onclick="setTab(this,'ref')">別SNSから流用</div>
                   <div class="src-tab active teal" onclick="setTab(this,'gen')">生成</div>
+                  <div class="src-tab" onclick="setTab(this,'ref')">別SNSから流用</div>
                   <div class="src-tab" onclick="setTab(this,'lib')">ライブラリ固定</div>
                 </div>
                 <div class="src-detail" data-mode="none" style="display:none;"></div>
-                <div class="src-detail" data-mode="ref" style="display:none;"><div class="sub-panel"><div class="two-col"><div class="form-group" style="margin:0;"><label>流用元SNS</label><select><option>NOTE サムネイル</option><option>YouTube サムネイル</option></select></div><div class="form-group" style="margin:0;"><label>バージョン</label><select><option>文字入れ後</option><option>文字入れ前</option></select></div></div></div></div>
                 <div class="src-detail" data-mode="gen" style="display:block;">
-                  <div class="sub-panel teal"><div class="form-group" style="margin-bottom:8px;"><label>生成プロンプト</label><textarea placeholder="2枚目用のプロンプト（省略時はベースプロンプト使用）" style="min-height:50px;"></textarea></div><div class="form-group" style="margin:0;"><label>文字入れ</label><select><option>なし</option><option>タイトルを自動挿入</option><option>カスタムテキスト</option></select></div></div>
+                  <div class="sub-panel teal">
+                    <div class="form-group" style="margin-bottom:8px;"><label>生成プロンプト</label><textarea style="min-height:50px;">YouTubeサムネイル用。目を引くデザイン、大きなテキスト対応、16:9比率。</textarea></div>
+                    <div class="toggle-row" style="padding:8px 0;border:none;"><div><div class="toggle-label" style="font-size:13px;">文字入れ</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+                    <div class="two-col"><div class="form-group" style="margin:0;"><label>テキスト内容</label><input type="text" value="{{title}}"/></div><div class="form-group" style="margin:0;"><label>位置</label><select><option>上部</option><option>中央</option><option>下部</option></select></div></div>
+                  </div>
                 </div>
+                <div class="src-detail" data-mode="ref" style="display:none;"><div class="sub-panel"><div class="two-col"><div class="form-group" style="margin:0;"><label>流用元SNS</label><select><option>NOTE サムネイル（文字入れ後）</option><option>NOTE サムネイル（文字入れ前）</option></select></div><div class="form-group" style="margin:0;"><label>バージョン</label><select><option>文字入れ後</option><option>文字入れ前（生画像）</option></select></div></div></div></div>
                 <div class="src-detail" data-mode="lib" style="display:none;"><div class="sub-panel amber"><label style="font-size:12px;font-weight:600;margin-bottom:6px;display:block;">キーマッピング</label><div style="display:flex;gap:8px;align-items:center;"><input type="text" placeholder="キー" style="flex:1;"/><span style="color:var(--gray-light);">=</span><div style="flex:2;background:var(--white);border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--gray-light);cursor:pointer;">📎 ファイルを選択...</div></div></div></div>
               </div>
             </div>
-
-            <div class="slot-card">
-              <div class="slot-header"><div class="slot-num">3</div><div class="slot-label">3枚目</div><div class="slot-remove" onclick="removeSlot(this)">×</div></div>
-              <div class="slot-body">
-                <div class="src-tabs">
-                  <div class="src-tab" onclick="setTab(this,'none')">なし</div>
-                  <div class="src-tab" onclick="setTab(this,'ref')">別SNSから流用</div>
-                  <div class="src-tab" onclick="setTab(this,'gen')">生成</div>
-                  <div class="src-tab active amber" onclick="setTab(this,'lib')">ライブラリ固定</div>
+          </div>
+          <!-- 動画スロット -->
+          <div style="font-size:12px;font-weight:700;color:var(--gray);margin:16px 0 8px;">🎬 動画</div>
+          <div class="slot-card">
+            <div class="slot-header"><div class="slot-num" style="background:var(--teal);">▶</div><div class="slot-label">動画スロット（1枠）</div></div>
+            <div class="slot-body">
+              <div class="src-tabs">
+                <div class="src-tab active teal" onclick="setTab(this,'veo')">Veo3生成</div>
+                <div class="src-tab" onclick="setTab(this,'interp')">フレーム補間</div>
+                <div class="src-tab" onclick="setTab(this,'telop')">テロップ挿入</div>
+              </div>
+              <div class="src-detail" data-mode="veo" style="display:block;">
+                <div class="sub-panel teal">
+                  <div class="form-group" style="margin-bottom:8px;"><label>プロンプト生成方式</label><select><option>投稿テキストから整形</option><option>一から自動生成</option></select></div>
+                  <div class="form-group" style="margin-bottom:8px;"><label>動画プロンプト</label><textarea placeholder="省略時は自動生成" style="min-height:50px;"></textarea></div>
+                  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+                    <div class="form-group" style="margin:0;"><label>動画長</label><select><option>8秒</option><option>16秒</option></select></div>
+                    <div class="form-group" style="margin:0;"><label>比率</label><select><option>16:9</option><option>9:16</option><option>1:1</option></select></div>
+                    <div class="form-group" style="margin:0;"><label>文字入れ</label><select><option>なし</option><option>タイトル自動挿入</option><option>カスタム</option></select></div>
+                  </div>
                 </div>
-                <div class="src-detail" data-mode="none" style="display:none;"></div>
-                <div class="src-detail" data-mode="ref" style="display:none;"></div>
-                <div class="src-detail" data-mode="gen" style="display:none;"></div>
-                <div class="src-detail" data-mode="lib" style="display:block;">
-                  <div class="sub-panel amber">
-                    <label style="font-size:12px;font-weight:600;color:var(--gray-dark);margin-bottom:8px;display:block;">キーマッピング</label>
-                    <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
-                      <input type="text" value="締めスライド" style="flex:1;"/>
-                      <span style="color:var(--gray-light);">=</span>
-                      <div style="flex:2;background:var(--white);border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--teal);cursor:pointer;">📎 ending_card.png</div>
-                      <div style="width:24px;height:24px;background:#fff0f0;border:1px solid var(--danger);color:var(--danger);border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;" onclick="this.closest('.slot-card')&&this.parentElement.parentElement.querySelector('input').value&&(this.parentElement.remove())">×</div>
-                    </div>
+              </div>
+              <div class="src-detail" data-mode="interp" style="display:none;">
+                <div class="sub-panel teal">
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px;">
+                    <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;">開始フレーム画像</label><select style="width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;"><option>生成（ベースプロンプト）</option><option>NOTEサムネイル（文字入れ前）</option><option>ライブラリ固定</option></select></div>
+                    <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;">終了フレーム画像</label><select style="width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;"><option>生成（ベースプロンプト）</option><option>NOTEサムネイル（文字入れ前）</option><option>ライブラリ固定</option></select></div>
+                  </div>
+                  <div class="form-group" style="margin-bottom:8px;"><label>補間プロンプト <span class="badge badge-opt">任意</span></label><textarea placeholder="カメラの動き、雰囲気など" style="min-height:50px;"></textarea></div>
+                  <div class="two-col">
+                    <div class="form-group" style="margin:0;"><label>動画長</label><select><option>8秒</option><option>16秒</option></select></div>
+                    <div class="form-group" style="margin:0;"><label>文字入れ</label><select><option>なし</option><option>タイトル自動挿入</option></select></div>
+                  </div>
+                </div>
+              </div>
+              <div class="src-detail" data-mode="telop" style="display:none;">
+                <div class="sub-panel amber">
+                  <div class="form-group" style="margin-bottom:8px;"><label>素材動画</label><select><option>ライブラリから選択</option><option>新規アップロード</option></select></div>
+                  <div class="form-group" style="margin-bottom:8px;"><label>テロップテキスト</label><input type="text" value="{{title}}"/></div>
+                  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+                    <div class="form-group" style="margin:0;"><label>位置</label><select><option>中央</option><option>上部</option><option>下部</option></select></div>
+                    <div class="form-group" style="margin:0;"><label>フォントサイズ</label><input type="text" value="48px"/></div>
+                    <div class="form-group" style="margin:0;"><label>比率調整</label><select><option>自動クロップ</option><option>リサイズ</option><option>そのまま</option></select></div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
+      </div>
 
-          <div class="add-slot-btn" onclick="addSlot('ig-slots','ig',10)">
-            <span style="font-size:18px;">+</span> 枚を追加（最大10枚）
+      <!-- Instagram -->
+      <div class="sns-slot-section">
+        <div class="sns-slot-header">
+          <div style="width:28px;height:28px;border-radius:6px;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);display:flex;align-items:center;justify-content:center;flex-shrink:0;">📸</div>
+          <div style="font-size:14px;font-weight:700;">Instagram</div>
+          <div style="font-size:11px;color:var(--gray-light);margin-left:auto;">投稿タイプで構成変化</div>
+        </div>
+        <div class="sns-slot-body">
+          <div class="section-tag tag-ig">Instagram</div>
+          <div style="margin-bottom:14px;">
+            <label style="font-size:12px;font-weight:700;color:var(--gray-dark);margin-bottom:8px;display:block;">投稿タイプ</label>
+            <div class="radio-group" style="flex-direction:row;gap:8px;">
+              <div class="radio-opt selected" style="flex:1;" onclick="selectRadio(this);switchIgType('feed')"><div class="radio-dot"></div><div class="radio-label">フィード（画像+動画）</div></div>
+              <div class="radio-opt" style="flex:1;" onclick="selectRadio(this);switchIgType('reel')"><div class="radio-dot"></div><div class="radio-label">リール（動画のみ）</div></div>
+            </div>
           </div>
 
-          <div class="divider"></div>
-          <label style="font-size:12px;font-weight:600;color:var(--gray-dark);margin-bottom:8px;display:block;">スロット構成プレビュー</label>
-          <div class="preview-strip" id="ig-preview">
-            <div class="preview-cell">1枚目<br>カバー<div class="badge badge-ref">流</div></div>
-            <div class="preview-cell">2枚目<div class="badge badge-gen">生</div></div>
-            <div class="preview-cell">3枚目<div class="badge badge-lib">固</div></div>
-            <div class="preview-cell" style="border-style:dashed;opacity:.5;font-size:18px;">+</div>
+          <!-- フィード -->
+          <div id="ig-feed-section">
+            <div style="font-size:12px;font-weight:700;color:var(--gray);margin-bottom:8px;">🖼 画像スロット（最大5枚）</div>
+            <div style="background:var(--blue-bg);border:1px solid var(--border);border-radius:6px;padding:10px 14px;margin-bottom:12px;font-size:12px;color:var(--gray-light);">
+              💡 動画スロットを挿入したい位置を下で指定してください。その番号のスロットが自動的に動画スロットに変わります。
+              <div style="margin-top:8px;display:flex;align-items:center;gap:10px;">
+                <span style="font-weight:600;color:var(--gray-dark);">動画を何枚目に挿入？</span>
+                <select id="ig-video-pos" onchange="updateIgSlots()" style="padding:5px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;">
+                  <option value="0">動画なし（画像のみ）</option>
+                  <option value="1">1枚目</option>
+                  <option value="2" selected>2枚目</option>
+                  <option value="3">3枚目</option>
+                </select>
+              </div>
+            </div>
+
+            <div id="ig-slots">
+              <!-- スロット1: 画像 -->
+              <div class="slot-card" id="ig-slot-1">
+                <div class="slot-header"><div class="slot-num">1</div><div class="slot-label">1枚目（カバー）</div></div>
+                <div class="slot-body">
+                  <div class="src-tabs">
+                    <div class="src-tab" onclick="setTab(this,'none')">なし</div>
+                    <div class="src-tab active" onclick="setTab(this,'ref')">別SNSから流用</div>
+                    <div class="src-tab" onclick="setTab(this,'gen')">生成</div>
+                    <div class="src-tab" onclick="setTab(this,'lib')">ライブラリ固定</div>
+                  </div>
+                  <div class="src-detail" data-mode="none" style="display:none;"></div>
+                  <div class="src-detail" data-mode="ref" style="display:block;"><div class="sub-panel"><div class="two-col"><div class="form-group" style="margin:0;"><label>流用元SNS</label><select><option>NOTE サムネイル</option><option>YouTube サムネイル</option></select></div><div class="form-group" style="margin:0;"><label>バージョン</label><select><option>文字入れ後</option><option>文字入れ前（生画像）</option></select></div></div></div></div>
+                  <div class="src-detail" data-mode="gen" style="display:none;"><div class="sub-panel teal"><div class="form-group" style="margin-bottom:8px;"><label>生成プロンプト</label><textarea style="min-height:50px;" placeholder="省略時はベース使用"></textarea></div><div class="toggle-row" style="padding:8px 0;border:none;"><div class="toggle-label" style="font-size:13px;">文字入れ</div><div class="toggle" onclick="this.classList.toggle('on')"></div></div></div></div>
+                  <div class="src-detail" data-mode="lib" style="display:none;"><div class="sub-panel amber"><label style="font-size:12px;font-weight:600;margin-bottom:6px;display:block;">キーマッピング</label><div style="display:flex;gap:8px;align-items:center;"><input type="text" placeholder="キー" style="flex:1;"/><span style="color:var(--gray-light);">=</span><div style="flex:2;background:var(--white);border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--gray-light);">📎 ファイルを選択...</div></div></div></div>
+                </div>
+              </div>
+
+              <!-- スロット2: 動画（デフォルト2枚目） -->
+              <div class="slot-card ig-video-slot" id="ig-slot-2">
+                <div class="slot-header" style="background:#e6f9f4;"><div class="slot-num" style="background:var(--teal);">2</div><div class="slot-label">2枚目 🎬 動画スロット</div></div>
+                <div class="slot-body">
+                  <div class="src-tabs">
+                    <div class="src-tab active teal" onclick="setTab(this,'veo')">Veo3生成</div>
+                    <div class="src-tab" onclick="setTab(this,'interp')">フレーム補間</div>
+                    <div class="src-tab" onclick="setTab(this,'telop')">テロップ挿入</div>
+                    <div class="src-tab" onclick="setTab(this,'vidref')">別SNSから流用</div>
+                  </div>
+                  <div class="src-detail" data-mode="veo" style="display:block;"><div class="sub-panel teal"><div class="form-group" style="margin-bottom:8px;"><label>プロンプト生成方式</label><select><option>投稿テキストから整形</option><option>一から自動生成</option></select></div><div class="two-col"><div class="form-group" style="margin:0;"><label>動画長</label><select><option>8秒</option><option>16秒</option></select></div><div class="form-group" style="margin:0;"><label>比率</label><select><option>9:16</option><option>1:1</option></select></div></div></div></div>
+                  <div class="src-detail" data-mode="interp" style="display:none;"><div class="sub-panel teal"><div class="two-col" style="margin-bottom:10px;"><div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;">開始フレーム</label><select style="width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;"><option>生成</option><option>NOTEサムネイル（文字入れ前）</option><option>ライブラリ固定</option></select></div><div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;">終了フレーム</label><select style="width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;"><option>生成</option><option>NOTEサムネイル（文字入れ前）</option><option>ライブラリ固定</option></select></div></div><div class="form-group" style="margin:0;"><label>動画長</label><select><option>8秒</option><option>16秒</option></select></div></div></div>
+                  <div class="src-detail" data-mode="telop" style="display:none;"><div class="sub-panel amber"><div class="form-group" style="margin-bottom:8px;"><label>素材動画</label><select><option>ライブラリから選択</option><option>新規アップロード</option></select></div><div class="form-group" style="margin:0;"><label>テロップ</label><input type="text" value="{{title}}"/></div></div></div>
+                  <div class="src-detail" data-mode="vidref" style="display:none;"><div class="sub-panel"><div class="form-group" style="margin:0;"><label>流用元SNS</label><select><option>YouTube動画</option><option>TikTok動画</option></select></div></div></div>
+                </div>
+              </div>
+
+              <!-- スロット3: 画像 -->
+              <div class="slot-card" id="ig-slot-3">
+                <div class="slot-header"><div class="slot-num">3</div><div class="slot-label">3枚目</div><div class="slot-remove" onclick="removeSlot(this)">×</div></div>
+                <div class="slot-body">
+                  <div class="src-tabs">
+                    <div class="src-tab" onclick="setTab(this,'none')">なし</div>
+                    <div class="src-tab" onclick="setTab(this,'ref')">別SNSから流用</div>
+                    <div class="src-tab" onclick="setTab(this,'gen')">生成</div>
+                    <div class="src-tab active amber" onclick="setTab(this,'lib')">ライブラリ固定</div>
+                  </div>
+                  <div class="src-detail" data-mode="none" style="display:none;"></div>
+                  <div class="src-detail" data-mode="ref" style="display:none;"></div>
+                  <div class="src-detail" data-mode="gen" style="display:none;"></div>
+                  <div class="src-detail" data-mode="lib" style="display:block;"><div class="sub-panel amber"><label style="font-size:12px;font-weight:600;margin-bottom:8px;display:block;">キーマッピング</label><div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;"><input type="text" value="締めスライド" style="flex:1;"/><span style="color:var(--gray-light);">=</span><div style="flex:2;background:var(--white);border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--teal);">📎 ending_card.png</div><div style="width:24px;height:24px;background:#fff0f0;border:1px solid var(--danger);color:var(--danger);border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;" onclick="removeSlot(this)">×</div></div></div></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="add-slot-btn" onclick="addSlot('ig-slots','ig',5)"><span style="font-size:18px;">+</span> 枚を追加（最大5枚、動画スロット分を除く）</div>
+
+            <div class="divider"></div>
+            <label style="font-size:12px;font-weight:600;color:var(--gray-dark);margin-bottom:8px;display:block;">スロット構成プレビュー</label>
+            <div class="preview-strip">
+              <div class="preview-cell">1枚目<div class="badge badge-ref">流</div></div>
+              <div class="preview-cell" style="background:#e6f9f4;border-color:var(--teal);">2枚目<br>🎬<div class="badge badge-gen" style="background:#e6f9f4;border-color:var(--teal);color:var(--teal);">動</div></div>
+              <div class="preview-cell">3枚目<div class="badge badge-lib">固</div></div>
+              <div class="preview-cell" style="border-style:dashed;opacity:.5;font-size:18px;">+</div>
+            </div>
           </div>
-          <div style="display:flex;gap:12px;margin-top:8px;font-size:10px;color:var(--gray-light);">
-            <span><span class="badge badge-ref" style="position:static;padding:2px 6px;">流</span> 別SNS流用</span>
-            <span><span class="badge badge-gen" style="position:static;padding:2px 6px;">生</span> 生成</span>
-            <span><span class="badge badge-lib" style="position:static;padding:2px 6px;">固</span> ライブラリ固定</span>
+
+          <!-- リール（動画のみ） -->
+          <div id="ig-reel-section" style="display:none;">
+            <div style="font-size:12px;font-weight:700;color:var(--gray);margin-bottom:8px;">🎬 動画（リール）</div>
+            <div class="slot-card">
+              <div class="slot-header" style="background:#e6f9f4;"><div class="slot-num" style="background:var(--teal);">▶</div><div class="slot-label">動画スロット（1枠）</div></div>
+              <div class="slot-body">
+                <div class="src-tabs">
+                  <div class="src-tab active teal" onclick="setTab(this,'veo')">Veo3生成</div>
+                  <div class="src-tab" onclick="setTab(this,'interp')">フレーム補間</div>
+                  <div class="src-tab" onclick="setTab(this,'telop')">テロップ挿入</div>
+                  <div class="src-tab" onclick="setTab(this,'vidref')">別SNSから流用</div>
+                </div>
+                <div class="src-detail" data-mode="veo" style="display:block;"><div class="sub-panel teal"><div class="form-group" style="margin-bottom:8px;"><label>プロンプト生成方式</label><select><option>投稿テキストから整形</option><option>一から自動生成</option></select></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;"><div class="form-group" style="margin:0;"><label>動画長</label><select><option>8秒</option><option>16秒</option></select></div><div class="form-group" style="margin:0;"><label>比率</label><select><option>9:16</option><option>1:1</option></select></div><div class="form-group" style="margin:0;"><label>文字入れ</label><select><option>なし</option><option>タイトル自動挿入</option></select></div></div></div></div>
+                <div class="src-detail" data-mode="interp" style="display:none;"><div class="sub-panel teal"><div class="form-group" style="margin:0;"><label>動画長</label><select><option>8秒</option><option>16秒</option></select></div></div></div>
+                <div class="src-detail" data-mode="telop" style="display:none;"><div class="sub-panel amber"><div class="form-group" style="margin-bottom:8px;"><label>素材動画</label><select><option>ライブラリから選択</option><option>新規アップロード</option></select></div><div class="form-group" style="margin:0;"><label>テロップ</label><input type="text" value="{{title}}"/></div></div></div>
+                <div class="src-detail" data-mode="vidref" style="display:none;"><div class="sub-panel"><div class="form-group" style="margin:0;"><label>流用元SNS</label><select><option>YouTube動画</option><option>TikTok動画</option></select></div></div></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- X -->
-      <div style="border:1px solid var(--border);border-radius:10px;margin-bottom:16px;overflow:hidden;">
-        <div style="display:flex;align-items:center;gap:10px;padding:14px 18px;background:var(--blue-bg);border-bottom:1px solid var(--border);">
-          <div style="width:28px;height:28px;border-radius:6px;background:#000;color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;">𝕏</div>
-          <div style="font-size:14px;font-weight:600;">X</div>
-          <div style="font-size:11px;color:var(--gray-light);margin-left:auto;">最大4枚</div>
+      <div class="sns-slot-section">
+        <div class="sns-slot-header">
+          <div style="width:28px;height:28px;border-radius:6px;background:#000;color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;">𝕏</div>
+          <div style="font-size:14px;font-weight:700;">X</div>
+          <div style="font-size:11px;color:var(--gray-light);margin-left:auto;">画像4枚 or 動画1枠</div>
         </div>
-        <div style="padding:16px 18px;">
+        <div class="sns-slot-body">
           <div class="section-tag tag-x">X</div>
-          <div id="x-slots">
-            <div class="slot-card">
-              <div class="slot-header"><div class="slot-num">1</div><div class="slot-label">1枚目</div></div>
-              <div class="slot-body">
-                <div class="src-tabs">
-                  <div class="src-tab" onclick="setTab(this,'none')">なし</div>
-                  <div class="src-tab active" onclick="setTab(this,'ref')">別SNSから流用</div>
-                  <div class="src-tab" onclick="setTab(this,'gen')">生成</div>
-                  <div class="src-tab" onclick="setTab(this,'lib')">ライブラリ固定</div>
-                </div>
-                <div class="src-detail" data-mode="none" style="display:none;"></div>
-                <div class="src-detail" data-mode="ref" style="display:block;">
-                  <div class="sub-panel"><div class="two-col">
-                    <div class="form-group" style="margin:0;"><label>流用元SNS</label><select><option>NOTE サムネイル</option><option>YouTube サムネイル</option><option>Instagram 1枚目</option></select></div>
-                    <div class="form-group" style="margin:0;"><label>バージョン</label><select><option>文字入れ後</option><option>文字入れ前（生画像）</option></select></div>
-                  </div></div>
-                </div>
-                <div class="src-detail" data-mode="gen" style="display:none;"><div class="sub-panel teal"><div class="form-group" style="margin:0;"><label>生成プロンプト</label><textarea placeholder="X投稿用の画像プロンプト..." style="min-height:50px;"></textarea></div></div></div>
-                <div class="src-detail" data-mode="lib" style="display:none;"><div class="sub-panel amber"><label style="font-size:12px;font-weight:600;margin-bottom:6px;display:block;">キーマッピング</label><div style="display:flex;gap:8px;align-items:center;"><input type="text" placeholder="キー" style="flex:1;"/><span style="color:var(--gray-light);">=</span><div style="flex:2;background:var(--white);border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--gray-light);cursor:pointer;">📎 ファイルを選択...</div></div></div></div>
-              </div>
+          <div style="margin-bottom:14px;">
+            <label style="font-size:12px;font-weight:700;color:var(--gray-dark);margin-bottom:8px;display:block;">投稿タイプ</label>
+            <div class="radio-group" style="flex-direction:row;gap:8px;">
+              <div class="radio-opt selected" style="flex:1;" onclick="selectRadio(this);switchXType('image')"><div class="radio-dot"></div><div class="radio-label">画像モード（最大4枚）</div></div>
+              <div class="radio-opt" style="flex:1;" onclick="selectRadio(this);switchXType('video')"><div class="radio-dot"></div><div class="radio-label">動画モード（1枠）</div></div>
             </div>
           </div>
-          <div class="add-slot-btn" onclick="addSlot('x-slots','x',4)"><span style="font-size:18px;">+</span> 枚を追加（最大4枚）</div>
-          <div class="divider"></div>
-          <div class="preview-strip" id="x-preview">
-            <div class="preview-cell">1枚目<div class="badge badge-ref">流</div></div>
-            <div class="preview-cell" style="border-style:dashed;opacity:.5;font-size:18px;">+</div>
+
+          <!-- 画像モード -->
+          <div id="x-image-section">
+            <div id="x-slots">
+              <div class="slot-card">
+                <div class="slot-header"><div class="slot-num">1</div><div class="slot-label">1枚目</div></div>
+                <div class="slot-body">
+                  <div class="src-tabs">
+                    <div class="src-tab" onclick="setTab(this,'none')">なし</div>
+                    <div class="src-tab active" onclick="setTab(this,'ref')">別SNSから流用</div>
+                    <div class="src-tab" onclick="setTab(this,'gen')">生成</div>
+                    <div class="src-tab" onclick="setTab(this,'lib')">ライブラリ固定</div>
+                  </div>
+                  <div class="src-detail" data-mode="none" style="display:none;"></div>
+                  <div class="src-detail" data-mode="ref" style="display:block;"><div class="sub-panel"><div class="two-col"><div class="form-group" style="margin:0;"><label>流用元SNS</label><select><option>NOTE サムネイル</option><option>YouTube サムネイル</option><option>Instagram 1枚目</option></select></div><div class="form-group" style="margin:0;"><label>バージョン</label><select><option>文字入れ後</option><option>文字入れ前（生画像）</option></select></div></div></div></div>
+                  <div class="src-detail" data-mode="gen" style="display:none;"><div class="sub-panel teal"><div class="form-group" style="margin:0;"><label>生成プロンプト</label><textarea style="min-height:50px;"></textarea></div></div></div>
+                  <div class="src-detail" data-mode="lib" style="display:none;"><div class="sub-panel amber"><label style="font-size:12px;font-weight:600;margin-bottom:6px;display:block;">キーマッピング</label><div style="display:flex;gap:8px;align-items:center;"><input type="text" placeholder="キー" style="flex:1;"/><span style="color:var(--gray-light);">=</span><div style="flex:2;background:var(--white);border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--gray-light);">📎 ファイルを選択...</div></div></div></div>
+                </div>
+              </div>
+            </div>
+            <div class="add-slot-btn" onclick="addSlot('x-slots','x',4)"><span style="font-size:18px;">+</span> 枚を追加（最大4枚）</div>
+          </div>
+
+          <!-- 動画モード -->
+          <div id="x-video-section" style="display:none;">
+            <div class="slot-card">
+              <div class="slot-header" style="background:#e6f9f4;"><div class="slot-num" style="background:var(--teal);">▶</div><div class="slot-label">動画スロット（1枠）</div></div>
+              <div class="slot-body">
+                <div class="src-tabs">
+                  <div class="src-tab active teal" onclick="setTab(this,'veo')">Veo3生成</div>
+                  <div class="src-tab" onclick="setTab(this,'interp')">フレーム補間</div>
+                  <div class="src-tab" onclick="setTab(this,'telop')">テロップ挿入</div>
+                  <div class="src-tab" onclick="setTab(this,'vidref')">別SNSから流用</div>
+                </div>
+                <div class="src-detail" data-mode="veo" style="display:block;"><div class="sub-panel teal"><div class="form-group" style="margin-bottom:8px;"><label>プロンプト生成方式</label><select><option>投稿テキストから整形</option><option>一から自動生成</option></select></div><div class="two-col"><div class="form-group" style="margin:0;"><label>動画長</label><select><option>8秒</option><option>16秒</option></select></div><div class="form-group" style="margin:0;"><label>比率</label><select><option>16:9</option><option>9:16</option><option>1:1</option></select></div></div></div></div>
+                <div class="src-detail" data-mode="interp" style="display:none;"><div class="sub-panel teal"><div class="form-group" style="margin:0;"><label>動画長</label><select><option>8秒</option><option>16秒</option></select></div></div></div>
+                <div class="src-detail" data-mode="telop" style="display:none;"><div class="sub-panel amber"><div class="form-group" style="margin-bottom:8px;"><label>素材動画</label><select><option>ライブラリから選択</option><option>新規アップロード</option></select></div><div class="form-group" style="margin:0;"><label>テロップ</label><input type="text" value="{{title}}"/></div></div></div>
+                <div class="src-detail" data-mode="vidref" style="display:none;"><div class="sub-panel"><div class="form-group" style="margin:0;"><label>流用元SNS</label><select><option>YouTube動画</option><option>TikTok動画</option></select></div></div></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- TikTok -->
-      <div style="border:1px solid var(--border);border-radius:10px;margin-bottom:16px;overflow:hidden;">
-        <div style="display:flex;align-items:center;gap:10px;padding:14px 18px;background:var(--blue-bg);border-bottom:1px solid var(--border);">
-          <div style="width:28px;height:28px;border-radius:6px;background:#000;color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;">🎵</div>
-          <div style="font-size:14px;font-weight:600;">TikTok</div>
-          <div style="font-size:11px;color:var(--gray-light);margin-left:auto;">最大4枚</div>
+      <div class="sns-slot-section">
+        <div class="sns-slot-header">
+          <div style="width:28px;height:28px;border-radius:6px;background:#000;color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🎵</div>
+          <div style="font-size:14px;font-weight:700;">TikTok</div>
+          <div style="font-size:11px;color:var(--gray-light);margin-left:auto;">動画スロット 1枠のみ</div>
         </div>
-        <div style="padding:16px 18px;">
+        <div class="sns-slot-body">
           <div class="section-tag tag-tt">TikTok</div>
-          <div id="tt-slots">
-            <div class="slot-card">
-              <div class="slot-header"><div class="slot-num">1</div><div class="slot-label">1枚目</div></div>
-              <div class="slot-body">
-                <div class="src-tabs">
-                  <div class="src-tab" onclick="setTab(this,'none')">なし</div>
-                  <div class="src-tab active" onclick="setTab(this,'ref')">別SNSから流用</div>
-                  <div class="src-tab" onclick="setTab(this,'gen')">生成</div>
-                  <div class="src-tab" onclick="setTab(this,'lib')">ライブラリ固定</div>
-                </div>
-                <div class="src-detail" data-mode="none" style="display:none;"></div>
-                <div class="src-detail" data-mode="ref" style="display:block;">
-                  <div class="sub-panel"><div class="two-col">
-                    <div class="form-group" style="margin:0;"><label>流用元SNS</label><select><option>NOTE サムネイル</option><option>YouTube サムネイル</option><option>Instagram 1枚目</option></select></div>
-                    <div class="form-group" style="margin:0;"><label>バージョン</label><select><option>文字入れ後</option><option>文字入れ前（生画像）</option></select></div>
-                  </div></div>
-                </div>
-                <div class="src-detail" data-mode="gen" style="display:none;"><div class="sub-panel teal"><div class="form-group" style="margin:0;"><label>生成プロンプト</label><textarea placeholder="TikTok投稿用の画像プロンプト..." style="min-height:50px;"></textarea></div></div></div>
-                <div class="src-detail" data-mode="lib" style="display:none;"><div class="sub-panel amber"><label style="font-size:12px;font-weight:600;margin-bottom:6px;display:block;">キーマッピング</label><div style="display:flex;gap:8px;align-items:center;"><input type="text" placeholder="キー" style="flex:1;"/><span style="color:var(--gray-light);">=</span><div style="flex:2;background:var(--white);border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--gray-light);cursor:pointer;">📎 ファイルを選択...</div></div></div></div>
-              </div>
-            </div>
-          </div>
-          <div class="add-slot-btn" onclick="addSlot('tt-slots','tt',4)"><span style="font-size:18px;">+</span> 枚を追加（最大4枚）</div>
-          <div class="divider"></div>
-          <div class="preview-strip" id="tt-preview">
-            <div class="preview-cell">1枚目<div class="badge badge-ref">流</div></div>
-            <div class="preview-cell" style="border-style:dashed;opacity:.5;font-size:18px;">+</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- YouTube -->
-      <div style="border:1px solid var(--border);border-radius:10px;margin-bottom:16px;overflow:hidden;">
-        <div style="display:flex;align-items:center;gap:10px;padding:14px 18px;background:var(--blue-bg);border-bottom:1px solid var(--border);">
-          <div style="width:28px;height:28px;border-radius:6px;background:#ff0000;display:flex;align-items:center;justify-content:center;">▶️</div>
-          <div style="font-size:14px;font-weight:600;">YouTube</div>
-          <div style="font-size:11px;color:var(--gray-light);margin-left:auto;">サムネイル 1枚固定</div>
-        </div>
-        <div style="padding:16px 18px;">
-          <div class="section-tag tag-yt">YouTube</div>
-
-          <!-- サムネイルスロット -->
-          <div style="font-size:12px;font-weight:700;color:var(--gray);margin-bottom:8px;">🖼 サムネイル</div>
           <div class="slot-card">
-            <div class="slot-header"><div class="slot-num">1</div><div class="slot-label">サムネイル（固定）</div></div>
+            <div class="slot-header" style="background:#e6f9f4;"><div class="slot-num" style="background:var(--teal);">▶</div><div class="slot-label">動画スロット（1枠）</div></div>
             <div class="slot-body">
               <div class="src-tabs">
-                <div class="src-tab" onclick="setTab(this,'none')">なし</div>
-                <div class="src-tab" onclick="setTab(this,'ref')">別SNSから流用</div>
-                <div class="src-tab active teal" onclick="setTab(this,'gen')">生成</div>
-                <div class="src-tab" onclick="setTab(this,'lib')">ライブラリ固定</div>
+                <div class="src-tab active teal" onclick="setTab(this,'veo')">Veo3生成</div>
+                <div class="src-tab" onclick="setTab(this,'interp')">フレーム補間</div>
+                <div class="src-tab" onclick="setTab(this,'telop')">テロップ挿入</div>
+                <div class="src-tab" onclick="setTab(this,'vidref')">別SNSから流用</div>
               </div>
-              <div class="src-detail" data-mode="none" style="display:none;"></div>
-              <div class="src-detail" data-mode="ref" style="display:none;">
-                <div class="sub-panel"><div class="two-col">
-                  <div class="form-group" style="margin:0;"><label>流用元SNS</label><select><option>NOTE サムネイル（文字入れ後）</option><option>NOTE サムネイル（文字入れ前）</option></select></div>
-                  <div class="form-group" style="margin:0;"><label>バージョン</label><select><option>文字入れ後</option><option>文字入れ前（生画像）</option></select></div>
-                </div></div>
-              </div>
-              <div class="src-detail" data-mode="gen" style="display:block;">
-                <div class="sub-panel teal">
-                  <div class="form-group" style="margin-bottom:8px;"><label>生成プロンプト</label><textarea style="min-height:50px;">YouTubeサムネイル用。目を引くデザイン、大きなテキスト対応、16:9比率。</textarea></div>
-                  <div class="form-group" style="margin:0;"><label>文字入れ</label><select><option>タイトルを自動挿入</option><option>なし</option></select></div>
-                </div>
-              </div>
-              <div class="src-detail" data-mode="lib" style="display:none;">
-                <div class="sub-panel amber"><label style="font-size:12px;font-weight:600;margin-bottom:6px;display:block;">キーマッピング</label>
-                  <div style="display:flex;gap:8px;align-items:center;"><input type="text" placeholder="キー" style="flex:1;"/><span style="color:var(--gray-light);">=</span><div style="flex:2;background:var(--white);border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--gray-light);cursor:pointer;">📎 ファイルを選択...</div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- 動画設定 -->
-          <div style="font-size:12px;font-weight:700;color:var(--gray);margin:16px 0 8px;">🎬 動画</div>
-          <div class="slot-card">
-            <div class="slot-header"><div class="slot-num" style="background:var(--teal);">▶</div><div class="slot-label">動画ソース</div></div>
-            <div class="slot-body">
-              <div class="src-tabs">
-                <div class="src-tab" onclick="setTab(this,'none')">なし</div>
-                <div class="src-tab active teal" onclick="setTab(this,'gen')">Veo3生成</div>
-                <div class="src-tab" onclick="setTab(this,'lib')">ライブラリ固定</div>
-              </div>
-              <div class="src-detail" data-mode="none" style="display:none;"></div>
-              <div class="src-detail" data-mode="gen" style="display:block;">
-                <div class="sub-panel teal">
-                  <div class="form-group" style="margin-bottom:8px;"><label>動画生成モード</label>
-                    <select>
-                      <option>Veo3 — プロンプトから生成</option>
-                      <option>Veo3 フレーム補間 — 開始・終了画像から生成</option>
-                      <option>既存動画に文字だけ入れる</option>
-                    </select>
-                  </div>
-                  <div class="form-group" style="margin-bottom:8px;"><label>生成プロンプト</label><textarea style="min-height:50px;" placeholder="動画生成プロンプト（英語推奨）"></textarea></div>
-                  <div class="two-col">
-                    <div class="form-group" style="margin:0;"><label>縦横比</label><select><option>縦動画（9:16）</option><option>横動画（16:9）</option><option>正方形（1:1）</option></select></div>
-                    <div class="form-group" style="margin:0;"><label>文字入れ</label><select><option>なし</option><option>タイトルを自動挿入</option></select></div>
-                  </div>
-                </div>
-              </div>
-              <div class="src-detail" data-mode="lib" style="display:none;">
-                <div class="sub-panel amber"><label style="font-size:12px;font-weight:600;margin-bottom:6px;display:block;">キーマッピング（動画ファイル）</label>
-                  <div style="display:flex;gap:8px;align-items:center;"><input type="text" placeholder="キー" style="flex:1;"/><span style="color:var(--gray-light);">=</span><div style="flex:2;background:var(--white);border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--gray-light);cursor:pointer;">📎 動画ファイルを選択...</div></div>
-                </div>
-              </div>
+              <div class="src-detail" data-mode="veo" style="display:block;"><div class="sub-panel teal"><div class="form-group" style="margin-bottom:8px;"><label>プロンプト生成方式</label><select><option>投稿テキストから整形</option><option>一から自動生成</option></select></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;"><div class="form-group" style="margin:0;"><label>動画長</label><select><option>8秒</option><option>16秒</option></select></div><div class="form-group" style="margin:0;"><label>比率</label><select><option>9:16</option><option>1:1</option></select></div><div class="form-group" style="margin:0;"><label>文字入れ</label><select><option>なし</option><option>タイトル自動挿入</option></select></div></div></div></div>
+              <div class="src-detail" data-mode="interp" style="display:none;"><div class="sub-panel teal"><div class="two-col" style="margin-bottom:10px;"><div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;">開始フレーム</label><select style="width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;"><option>生成</option><option>NOTEサムネイル（文字入れ前）</option><option>YouTubeサムネイル（文字入れ前）</option><option>ライブラリ固定</option></select></div><div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;">終了フレーム</label><select style="width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;"><option>生成</option><option>NOTEサムネイル（文字入れ前）</option><option>ライブラリ固定</option></select></div></div><div class="form-group" style="margin-bottom:8px;"><label>補間プロンプト</label><textarea style="min-height:40px;" placeholder="任意"></textarea></div><div class="two-col"><div class="form-group" style="margin:0;"><label>動画長</label><select><option>8秒</option><option>16秒</option></select></div><div class="form-group" style="margin:0;"><label>文字入れ</label><select><option>なし</option><option>タイトル自動挿入</option></select></div></div></div></div>
+              <div class="src-detail" data-mode="telop" style="display:none;"><div class="sub-panel amber"><div class="form-group" style="margin-bottom:8px;"><label>素材動画</label><select><option>ライブラリから選択</option><option>新規アップロード</option></select></div><div class="form-group" style="margin-bottom:8px;"><label>テロップテキスト</label><input type="text" value="{{title}}"/></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;"><div class="form-group" style="margin:0;"><label>位置</label><select><option>中央</option><option>上部</option><option>下部</option></select></div><div class="form-group" style="margin:0;"><label>フォントサイズ</label><input type="text" value="48px"/></div><div class="form-group" style="margin:0;"><label>比率調整</label><select><option>自動クロップ</option><option>リサイズ</option></select></div></div></div></div>
+              <div class="src-detail" data-mode="vidref" style="display:block; display:none;"><div class="sub-panel"><div class="form-group" style="margin:0;"><label>流用元SNS</label><select><option>YouTube動画</option></select></div><p style="font-size:11px;color:var(--gray-light);margin-top:8px;padding:6px 10px;background:var(--blue-bg);border-radius:4px;border-left:3px solid var(--blue-mid);">YouTubeで生成した動画をそのままTikTokに流用</p></div></div>
             </div>
           </div>
         </div>
@@ -825,7 +879,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
     </div>
   </div>
 </div>
-
 
 <!-- ===== モーダル: 編集 ===== -->
 <div id="editModal" class="modal">
@@ -1041,6 +1094,19 @@ function selChip(el) {
 function selCredOpt(el) {
   el.closest('.cred-toggle').querySelectorAll('.cred-opt').forEach(function(o){ o.classList.remove('active'); });
   el.classList.add('active');
+}
+
+// ===== 投稿タイプ切替 =====
+function switchYtType(type) {
+  document.getElementById('yt-thumb-section').style.display = type==='long' ? '' : 'none';
+}
+function switchIgType(type) {
+  document.getElementById('ig-feed-section').style.display = type==='feed' ? '' : 'none';
+  document.getElementById('ig-reel-section').style.display = type==='reel' ? '' : 'none';
+}
+function switchXType(type) {
+  document.getElementById('x-image-section').style.display = type==='image' ? '' : 'none';
+  document.getElementById('x-video-section').style.display = type==='video' ? '' : 'none';
 }
 
 // ===== 画像スロット =====
