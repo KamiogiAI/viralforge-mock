@@ -1,0 +1,484 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f1117;--bg2:#161b27;--bg3:#1e2535;--bg4:#252d3f;
+  --border:#2a3348;--border2:#354060;
+  --text:#e8ecf4;--text2:#8a95b0;--text3:#4d5a75;
+  --accent:#4f7cff;--accent-dim:#1a2d6b;
+  --teal:#1ac8a0;--teal-dim:#0d3d30;
+  --amber:#f5a623;--amber-dim:#3d2a0a;
+  --coral:#ff6b6b;--coral-dim:#3d1a1a;
+  --radius:10px;--radius-sm:6px;
+}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.5;min-height:100vh}
+.shell{max-width:780px;margin:0 auto;padding:24px 20px 60px}
+.page-title{font-size:15px;font-weight:600;margin-bottom:24px;display:flex;align-items:center;gap:8px;color:var(--text)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+
+/* SNS section */
+.sns-block{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;overflow:hidden}
+.sns-header{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--border);cursor:pointer;user-select:none}
+.sns-icon{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.icon-note{background:#000;color:#fff;font-family:'JetBrains Mono',monospace;font-size:11px}
+.icon-yt{background:#ff0000}
+.icon-ig{background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)}
+.icon-x{background:#000;color:#fff;font-size:12px}
+.sns-name{font-size:13px;font-weight:600}
+.sns-desc{font-size:11px;color:var(--text3);margin-left:auto}
+.sns-body{padding:16px 18px}
+
+/* slot */
+.slots-wrap{display:flex;flex-direction:column;gap:10px}
+.slot-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}
+.slot-header{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--border)}
+.slot-num{width:20px;height:20px;border-radius:50%;background:var(--bg4);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text3);flex-shrink:0}
+.slot-label{font-size:12px;font-weight:500;color:var(--text2)}
+.slot-remove{margin-left:auto;width:20px;height:20px;border-radius:4px;background:var(--coral-dim);border:1px solid var(--coral);color:var(--coral);font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;line-height:1}
+.slot-body{padding:12px 14px}
+
+/* source selector */
+.src-tabs{display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap}
+.src-tab{padding:5px 10px;border-radius:20px;font-size:11px;font-weight:500;border:1px solid var(--border);color:var(--text3);cursor:pointer;background:var(--bg4);transition:all .15s;white-space:nowrap}
+.src-tab:hover{border-color:var(--border2);color:var(--text2)}
+.src-tab.active{border-color:var(--accent);background:var(--accent-dim);color:var(--accent)}
+.src-tab.active.teal{border-color:var(--teal);background:var(--teal-dim);color:var(--teal)}
+.src-tab.active.amber{border-color:var(--amber);background:var(--amber-dim);color:var(--amber)}
+
+/* source detail panels */
+.src-detail{display:none}
+.src-detail.show{display:block}
+.src-panel{background:var(--bg4);border-radius:var(--radius-sm);padding:10px 12px}
+
+/* select / input */
+select,input[type=text]{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'DM Sans',sans-serif;font-size:12px;padding:7px 10px;outline:none;transition:border-color .15s}
+select:focus,input[type=text]:focus{border-color:var(--accent)}
+textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'DM Sans',sans-serif;font-size:12px;padding:7px 10px;outline:none;resize:vertical;min-height:52px;transition:border-color .15s}
+textarea:focus{border-color:var(--accent)}
+
+.form-label{font-size:11px;color:var(--text3);margin-bottom:4px}
+.form-row{margin-bottom:8px}
+.form-row:last-child{margin-bottom:0}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+
+/* mapping rows */
+.map-row{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.map-row input[type=text]{flex:1;min-width:0}
+.map-eq{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text3);flex-shrink:0}
+.map-file-btn{flex:2;min-width:0;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 10px;font-size:11px;color:var(--text2);cursor:pointer;text-align:left;display:flex;align-items:center;gap:5px}
+.map-file-btn .file-name{font-size:11px;color:var(--teal)}
+.map-del{width:22px;height:22px;border-radius:4px;background:var(--coral-dim);border:1px solid var(--coral);color:var(--coral);font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+
+/* add slot btn */
+.add-slot-btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;border-radius:var(--radius-sm);border:1px dashed var(--border2);color:var(--text3);font-size:12px;cursor:pointer;transition:all .15s;margin-top:8px}
+.add-slot-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* preview strip */
+.preview-strip{display:flex;gap:6px;margin-top:10px}
+.preview-cell{width:52px;height:52px;border-radius:6px;background:var(--bg4);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text3);text-align:center;line-height:1.3;flex-shrink:0;position:relative}
+.preview-cell .src-badge{position:absolute;bottom:2px;right:2px;width:14px;height:14px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700}
+.badge-gen{background:var(--teal-dim);border:1px solid var(--teal);color:var(--teal)}
+.badge-ref{background:var(--accent-dim);border:1px solid var(--accent);color:var(--accent)}
+.badge-lib{background:var(--amber-dim);border:1px solid var(--amber);color:var(--amber)}
+
+.divider{height:1px;background:var(--border);margin:10px 0}
+.tag{display:inline-flex;align-items:center;padding:2px 7px;border-radius:3px;font-size:10px;font-weight:600;margin-bottom:10px}
+.tag-note{background:#111;border:1px solid #333;color:#bbb}
+.tag-yt{background:#1a0000;border:1px solid #ff0000;color:#ff5555}
+.tag-ig{background:#1a0d1f;border:1px solid #cc2366;color:#e060a0}
+.tag-x{background:#111;border:1px solid #444;color:#aaa}
+
+.hint{font-size:11px;color:var(--text3);margin-top:6px;padding:6px 10px;background:var(--bg4);border-radius:var(--radius-sm);border-left:2px solid var(--accent)}
+</style>
+
+<div class="shell">
+  <div class="page-title"><div class="dot"></div>SNS画像スロット設定</div>
+
+  <!-- NOTE -->
+  <div class="sns-block">
+    <div class="sns-header">
+      <div class="sns-icon icon-note">N</div>
+      <div class="sns-name">NOTE</div>
+      <div class="sns-desc">サムネイル 1枚固定</div>
+    </div>
+    <div class="sns-body">
+      <div class="tag tag-note">NOTE</div>
+      <div class="slots-wrap">
+        <div class="slot-card">
+          <div class="slot-header">
+            <div class="slot-num">1</div>
+            <div class="slot-label">サムネイル（固定）</div>
+          </div>
+          <div class="slot-body">
+            <div class="src-tabs">
+              <div class="src-tab" onclick="setTab(this,'note-s1','none')">なし</div>
+              <div class="src-tab active teal" onclick="setTab(this,'note-s1','gen')">生成</div>
+              <div class="src-tab" onclick="setTab(this,'note-s1','lib')">ライブラリ固定</div>
+            </div>
+            <div id="note-s1-none" class="src-detail"></div>
+            <div id="note-s1-gen" class="src-detail show">
+              <div class="src-panel">
+                <div class="form-row">
+                  <div class="form-label">生成プロンプト</div>
+                  <textarea>金融・投資テーマの洗練されたサムネイル。グラフや数字を取り入れたデザイン。</textarea>
+                </div>
+                <div class="form-row">
+                  <div class="form-label">文字入れ</div>
+                  <select><option>タイトルを自動挿入</option><option>なし（画像のみ）</option><option>カスタムテキスト</option></select>
+                </div>
+              </div>
+              <div class="hint">生成後「文字入れ前」と「文字入れ後」の両方を保存 → 他SNSから参照可能</div>
+            </div>
+            <div id="note-s1-lib" class="src-detail">
+              <div class="src-panel">
+                <div class="form-label" style="margin-bottom:6px">キーマッピング</div>
+                <div class="map-row">
+                  <input type="text" placeholder="キー（例: 第1話）" value="第1話"/>
+                  <div class="map-eq">=</div>
+                  <div class="map-file-btn"><span>📎</span><span class="file-name">ep01_thumb.jpg</span></div>
+                  <div class="map-del">×</div>
+                </div>
+                <div class="map-row">
+                  <input type="text" placeholder="キー（例: 第2話）" value="第2話"/>
+                  <div class="map-eq">=</div>
+                  <div class="map-file-btn"><span>📎</span><span class="file-name">ep02_thumb.jpg</span></div>
+                  <div class="map-del">×</div>
+                </div>
+                <div class="map-row">
+                  <input type="text" placeholder="キー"/>
+                  <div class="map-eq">=</div>
+                  <div class="map-file-btn" style="color:var(--text3)"><span>📎</span><span>ファイルを選択...</span></div>
+                  <div class="map-del" style="opacity:.4">×</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Instagram -->
+  <div class="sns-block">
+    <div class="sns-header">
+      <div class="sns-icon icon-ig">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" stroke="white" stroke-width="2"/><circle cx="12" cy="12" r="4" stroke="white" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.2" fill="white"/></svg>
+      </div>
+      <div class="sns-name">Instagram</div>
+      <div class="sns-desc">最大10枚（カルーセル）</div>
+    </div>
+    <div class="sns-body">
+      <div class="tag tag-ig">Instagram</div>
+
+      <div class="slots-wrap" id="ig-slots">
+        <!-- slot 1 -->
+        <div class="slot-card">
+          <div class="slot-header">
+            <div class="slot-num">1</div>
+            <div class="slot-label">1枚目（カバー）</div>
+          </div>
+          <div class="slot-body">
+            <div class="src-tabs">
+              <div class="src-tab" onclick="setTab(this,'ig-s1','none')">なし</div>
+              <div class="src-tab active" onclick="setTab(this,'ig-s1','ref')">別SNSから流用</div>
+              <div class="src-tab" onclick="setTab(this,'ig-s1','gen')">生成</div>
+              <div class="src-tab" onclick="setTab(this,'ig-s1','lib')">ライブラリ固定</div>
+            </div>
+            <div id="ig-s1-none" class="src-detail"></div>
+            <div id="ig-s1-ref" class="src-detail show">
+              <div class="src-panel">
+                <div class="two-col">
+                  <div class="form-row" style="margin:0">
+                    <div class="form-label">流用元SNS</div>
+                    <select>
+                      <option>NOTE サムネイル</option>
+                      <option>YouTube サムネイル</option>
+                    </select>
+                  </div>
+                  <div class="form-row" style="margin:0">
+                    <div class="form-label">バージョン</div>
+                    <select>
+                      <option>文字入れ後</option>
+                      <option>文字入れ前（生画像）</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="hint">NOTEサムネイル生成後に自動で取得。NOTEが未選択の場合は使用不可。</div>
+            </div>
+            <div id="ig-s1-gen" class="src-detail">
+              <div class="src-panel">
+                <div class="form-row"><div class="form-label">生成プロンプト</div><textarea placeholder="この枚のみに適用するプロンプト..."></textarea></div>
+                <div class="form-row" style="margin:0"><div class="form-label">文字入れ</div><select><option>タイトルを自動挿入</option><option>なし</option></select></div>
+              </div>
+            </div>
+            <div id="ig-s1-lib" class="src-detail">
+              <div class="src-panel">
+                <div class="form-label" style="margin-bottom:6px">キーマッピング</div>
+                <div class="map-row">
+                  <input type="text" placeholder="キー"/>
+                  <div class="map-eq">=</div>
+                  <div class="map-file-btn" style="color:var(--text3)"><span>📎</span><span>ファイルを選択...</span></div>
+                  <div class="map-del" style="opacity:.4">×</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- slot 2 -->
+        <div class="slot-card">
+          <div class="slot-header">
+            <div class="slot-num">2</div>
+            <div class="slot-label">2枚目</div>
+            <div class="slot-remove" onclick="removeSlot(this)">×</div>
+          </div>
+          <div class="slot-body">
+            <div class="src-tabs">
+              <div class="src-tab" onclick="setTab(this,'ig-s2','none')">なし</div>
+              <div class="src-tab" onclick="setTab(this,'ig-s2','ref')">別SNSから流用</div>
+              <div class="src-tab active teal" onclick="setTab(this,'ig-s2','gen')">生成</div>
+              <div class="src-tab" onclick="setTab(this,'ig-s2','lib')">ライブラリ固定</div>
+            </div>
+            <div id="ig-s2-none" class="src-detail"></div>
+            <div id="ig-s2-ref" class="src-detail"></div>
+            <div id="ig-s2-gen" class="src-detail show">
+              <div class="src-panel">
+                <div class="form-row"><div class="form-label">生成プロンプト</div><textarea placeholder="2枚目用のプロンプト（省略時はベースプロンプト使用）"></textarea></div>
+                <div class="form-row" style="margin:0"><div class="form-label">文字入れ</div><select><option>なし</option><option>タイトルを自動挿入</option><option>カスタムテキスト</option></select></div>
+              </div>
+            </div>
+            <div id="ig-s2-lib" class="src-detail"></div>
+          </div>
+        </div>
+
+        <!-- slot 3 -->
+        <div class="slot-card">
+          <div class="slot-header">
+            <div class="slot-num">3</div>
+            <div class="slot-label">3枚目</div>
+            <div class="slot-remove" onclick="removeSlot(this)">×</div>
+          </div>
+          <div class="slot-body">
+            <div class="src-tabs">
+              <div class="src-tab" onclick="setTab(this,'ig-s3','none')">なし</div>
+              <div class="src-tab" onclick="setTab(this,'ig-s3','ref')">別SNSから流用</div>
+              <div class="src-tab" onclick="setTab(this,'ig-s3','gen')">生成</div>
+              <div class="src-tab active amber" onclick="setTab(this,'ig-s3','lib')">ライブラリ固定</div>
+            </div>
+            <div id="ig-s3-none" class="src-detail"></div>
+            <div id="ig-s3-ref" class="src-detail"></div>
+            <div id="ig-s3-gen" class="src-detail"></div>
+            <div id="ig-s3-lib" class="src-detail show">
+              <div class="src-panel">
+                <div class="form-label" style="margin-bottom:6px">キーマッピング</div>
+                <div class="map-row">
+                  <input type="text" value="締めスライド"/>
+                  <div class="map-eq">=</div>
+                  <div class="map-file-btn"><span>📎</span><span class="file-name">ending_card.png</span></div>
+                  <div class="map-del">×</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="add-slot-btn" onclick="addSlot('ig-slots','ig')">
+        <span style="font-size:16px;line-height:1">+</span> 枚を追加（最大10枚）
+      </div>
+
+      <!-- preview strip -->
+      <div class="divider"></div>
+      <div class="form-label" style="margin-bottom:6px">スロット構成プレビュー</div>
+      <div class="preview-strip" id="ig-preview">
+        <div class="preview-cell">1枚目<br>カバー<div class="src-badge badge-ref">流</div></div>
+        <div class="preview-cell">2枚目<div class="src-badge badge-gen">生</div></div>
+        <div class="preview-cell">3枚目<div class="src-badge badge-lib">固</div></div>
+        <div class="preview-cell" style="border-style:dashed;opacity:.4;font-size:18px;color:var(--text3)">+</div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:6px;flex-wrap:wrap">
+        <span style="font-size:10px;color:var(--text3);display:flex;align-items:center;gap:3px"><span class="src-badge badge-ref" style="position:static;width:14px;height:14px;border-radius:3px;display:inline-flex;align-items:center;justify-content:center;font-size:8px">流</span> 別SNS流用</span>
+        <span style="font-size:10px;color:var(--text3);display:flex;align-items:center;gap:3px"><span class="src-badge badge-gen" style="position:static;width:14px;height:14px;border-radius:3px;display:inline-flex;align-items:center;justify-content:center;font-size:8px">生</span> 生成</span>
+        <span style="font-size:10px;color:var(--text3);display:flex;align-items:center;gap:3px"><span class="src-badge badge-lib" style="position:static;width:14px;height:14px;border-radius:3px;display:inline-flex;align-items:center;justify-content:center;font-size:8px">固</span> ライブラリ固定</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- X -->
+  <div class="sns-block">
+    <div class="sns-header">
+      <div class="sns-icon icon-x">𝕏</div>
+      <div class="sns-name">X</div>
+      <div class="sns-desc">最大4枚</div>
+    </div>
+    <div class="sns-body">
+      <div class="tag tag-x">X</div>
+      <div class="slots-wrap" id="x-slots">
+        <div class="slot-card">
+          <div class="slot-header">
+            <div class="slot-num">1</div>
+            <div class="slot-label">1枚目</div>
+          </div>
+          <div class="slot-body">
+            <div class="src-tabs">
+              <div class="src-tab" onclick="setTab(this,'x-s1','none')">なし</div>
+              <div class="src-tab active" onclick="setTab(this,'x-s1','ref')">別SNSから流用</div>
+              <div class="src-tab" onclick="setTab(this,'x-s1','gen')">生成</div>
+              <div class="src-tab" onclick="setTab(this,'x-s1','lib')">ライブラリ固定</div>
+            </div>
+            <div id="x-s1-none" class="src-detail"></div>
+            <div id="x-s1-ref" class="src-detail show">
+              <div class="src-panel">
+                <div class="two-col">
+                  <div class="form-row" style="margin:0">
+                    <div class="form-label">流用元SNS</div>
+                    <select><option>NOTE サムネイル</option><option>YouTube サムネイル</option><option>Instagram 1枚目</option></select>
+                  </div>
+                  <div class="form-row" style="margin:0">
+                    <div class="form-label">バージョン</div>
+                    <select><option>文字入れ後</option><option>文字入れ前（生画像）</option></select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="x-s1-gen" class="src-detail">
+              <div class="src-panel">
+                <div class="form-row" style="margin:0"><div class="form-label">生成プロンプト</div><textarea placeholder="X投稿用の画像プロンプト..."></textarea></div>
+              </div>
+            </div>
+            <div id="x-s1-lib" class="src-detail"></div>
+          </div>
+        </div>
+      </div>
+      <div class="add-slot-btn" onclick="addSlot('x-slots','x')">
+        <span style="font-size:16px;line-height:1">+</span> 枚を追加（最大4枚）
+      </div>
+      <div class="divider"></div>
+      <div class="form-label" style="margin-bottom:6px">スロット構成プレビュー</div>
+      <div class="preview-strip" id="x-preview">
+        <div class="preview-cell">1枚目<div class="src-badge badge-ref">流</div></div>
+        <div class="preview-cell" style="border-style:dashed;opacity:.4;font-size:18px;color:var(--text3)">+</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- YouTube -->
+  <div class="sns-block">
+    <div class="sns-header">
+      <div class="sns-icon icon-yt">
+        <svg width="14" height="10" viewBox="0 0 16 12" fill="none"><path d="M15.6 1.87C15.42.78 14.64.1 13.6 0 11.72-.1 8 0 8 0S4.28-.1 2.4 0C1.36.1.58.78.4 1.87 0 4 0 6 0 6s0 2 .4 4.13c.18 1.09.96 1.77 2 1.87C4.28 12 8 12 8 12s3.72 0 5.6-.1c1.04-.1 1.82-.78 2-1.87C16 8 16 6 16 6s0-2-.4-4.13zM6.4 8.5V3.5L11 6l-4.6 2.5z" fill="white"/></svg>
+      </div>
+      <div class="sns-name">YouTube</div>
+      <div class="sns-desc">サムネイル 1枚固定</div>
+    </div>
+    <div class="sns-body">
+      <div class="tag tag-yt">YouTube</div>
+      <div class="slots-wrap">
+        <div class="slot-card">
+          <div class="slot-header">
+            <div class="slot-num">1</div>
+            <div class="slot-label">サムネイル（固定）</div>
+          </div>
+          <div class="slot-body">
+            <div class="src-tabs">
+              <div class="src-tab" onclick="setTab(this,'yt-s1','none')">なし</div>
+              <div class="src-tab" onclick="setTab(this,'yt-s1','ref')">別SNSから流用</div>
+              <div class="src-tab active teal" onclick="setTab(this,'yt-s1','gen')">生成</div>
+              <div class="src-tab" onclick="setTab(this,'yt-s1','lib')">ライブラリ固定</div>
+            </div>
+            <div id="yt-s1-none" class="src-detail"></div>
+            <div id="yt-s1-ref" class="src-detail">
+              <div class="src-panel">
+                <div class="two-col">
+                  <div class="form-row" style="margin:0"><div class="form-label">流用元SNS</div><select><option>NOTE サムネイル</option><option>Instagram 1枚目</option></select></div>
+                  <div class="form-row" style="margin:0"><div class="form-label">バージョン</div><select><option>文字入れ後</option><option>文字入れ前（生画像）</option></select></div>
+                </div>
+              </div>
+            </div>
+            <div id="yt-s1-gen" class="src-detail show">
+              <div class="src-panel">
+                <div class="form-row"><div class="form-label">生成プロンプト</div><textarea>YouTubeサムネイル用。目を引くデザイン、大きなテキスト対応、16:9比率。</textarea></div>
+                <div class="form-row" style="margin:0"><div class="form-label">文字入れ</div><select><option>タイトルを自動挿入</option><option>なし</option></select></div>
+              </div>
+            </div>
+            <div id="yt-s1-lib" class="src-detail"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let igCount=3, xCount=1;
+
+function setTab(el, prefix, mode){
+  const tabs=el.closest('.src-tabs').querySelectorAll('.src-tab');
+  tabs.forEach(t=>{t.classList.remove('active','teal','amber')});
+  el.classList.add('active');
+  if(mode==='gen') el.classList.add('teal');
+  if(mode==='lib') el.classList.add('amber');
+  const body=el.closest('.slot-body');
+  body.querySelectorAll('.src-detail').forEach(d=>d.classList.remove('show'));
+  const target=document.getElementById(prefix+'-'+mode);
+  if(target) target.classList.add('show');
+}
+
+function removeSlot(btn){
+  btn.closest('.slot-card').remove();
+}
+
+function addSlot(containerId, sns){
+  const maxMap={ig:10,x:4};
+  const container=document.getElementById(containerId);
+  const cards=container.querySelectorAll('.slot-card');
+  const max=maxMap[sns]||10;
+  if(cards.length>=max){alert(`最大${max}枚まで設定できます`);return;}
+  const n=cards.length+1;
+  const id=sns+'-s'+n+'-'+Date.now();
+  const div=document.createElement('div');
+  div.className='slot-card';
+  div.innerHTML=`
+    <div class="slot-header">
+      <div class="slot-num">${n}</div>
+      <div class="slot-label">${n}枚目</div>
+      <div class="slot-remove" onclick="removeSlot(this)">×</div>
+    </div>
+    <div class="slot-body">
+      <div class="src-tabs">
+        <div class="src-tab active" onclick="setTab(this,'${id}','none')">なし</div>
+        <div class="src-tab" onclick="setTab(this,'${id}','ref')">別SNSから流用</div>
+        <div class="src-tab" onclick="setTab(this,'${id}','gen')">生成</div>
+        <div class="src-tab" onclick="setTab(this,'${id}','lib')">ライブラリ固定</div>
+      </div>
+      <div id="${id}-none" class="src-detail show"></div>
+      <div id="${id}-ref" class="src-detail">
+        <div class="src-panel">
+          <div class="two-col">
+            <div class="form-row" style="margin:0"><div class="form-label">流用元SNS</div><select><option>NOTE サムネイル</option><option>YouTube サムネイル</option><option>Instagram 1枚目</option></select></div>
+            <div class="form-row" style="margin:0"><div class="form-label">バージョン</div><select><option>文字入れ後</option><option>文字入れ前（生画像）</option></select></div>
+          </div>
+        </div>
+      </div>
+      <div id="${id}-gen" class="src-detail">
+        <div class="src-panel">
+          <div class="form-row" style="margin:0"><div class="form-label">生成プロンプト</div><textarea placeholder="この枚のプロンプト（省略時はベースプロンプト使用）"></textarea></div>
+        </div>
+      </div>
+      <div id="${id}-lib" class="src-detail">
+        <div class="src-panel">
+          <div class="form-label" style="margin-bottom:6px">キーマッピング</div>
+          <div class="map-row">
+            <input type="text" placeholder="キー"/>
+            <div class="map-eq">=</div>
+            <div class="map-file-btn" style="color:var(--text3)"><span>📎</span><span>ファイルを選択...</span></div>
+            <div class="map-del" style="opacity:.4">×</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  container.appendChild(div);
+}
+</script>

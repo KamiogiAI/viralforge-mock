@@ -1,0 +1,519 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f1117;--bg2:#161b27;--bg3:#1e2535;--bg4:#252d3f;
+  --border:#2a3348;--border2:#354060;
+  --text:#e8ecf4;--text2:#8a95b0;--text3:#4d5a75;
+  --accent:#4f7cff;--accent2:#3d6aff;--accent-dim:#1a2d6b;
+  --teal:#1ac8a0;--teal-dim:#0d3d30;
+  --amber:#f5a623;--amber-dim:#3d2a0a;
+  --red:#ff5252;
+  --radius:10px;--radius-sm:6px;
+}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.6;min-height:100vh}
+.shell{max-width:820px;margin:0 auto;padding:24px 20px 60px}
+
+/* header */
+.header{display:flex;align-items:center;gap:12px;margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.header-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent)}
+.header h1{font-size:17px;font-weight:500;letter-spacing:-.2px}
+.header .step-badge{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text3);background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:3px 10px}
+
+/* section */
+.section{margin-bottom:24px}
+.section-label{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.section-label::before{content:'';display:block;width:3px;height:11px;background:var(--accent);border-radius:2px}
+
+/* step block */
+.step{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:14px}
+.step-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.step-num{width:22px;height:22px;border-radius:50%;background:var(--accent-dim);border:1px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:var(--accent);font-family:'JetBrains Mono',monospace;flex-shrink:0}
+
+/* SNS selector */
+.sns-grid{display:flex;gap:10px;flex-wrap:wrap}
+.sns-btn{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 14px;border-radius:var(--radius);border:1.5px solid var(--border);background:var(--bg3);cursor:pointer;transition:all .15s;min-width:80px;user-select:none}
+.sns-btn:hover{border-color:var(--border2);background:var(--bg4)}
+.sns-btn.active{border-color:var(--accent);background:var(--accent-dim)}
+.sns-btn .sns-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.sns-btn .sns-name{font-size:11px;font-weight:500;color:var(--text2)}
+.sns-btn.active .sns-name{color:var(--accent)}
+
+/* note icon */
+.icon-note{background:#000;color:#fff;font-weight:700;font-size:13px;font-family:'JetBrains Mono',monospace}
+.icon-yt{background:#ff0000}
+.icon-ig{background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)}
+.icon-x{background:#000;color:#fff;font-size:14px;font-weight:700}
+.icon-tt{background:#000;color:#fff;font-size:15px}
+
+/* form elements */
+.form-row{margin-bottom:12px}
+.form-label{font-size:11px;font-weight:500;color:var(--text2);margin-bottom:5px;display:flex;align-items:center;gap:6px}
+.badge-opt{font-size:9px;color:var(--text3);background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:1px 5px}
+.badge-req{font-size:9px;color:var(--accent);background:var(--accent-dim);border:1px solid var(--accent);border-radius:3px;padding:1px 5px}
+textarea,input[type=text]{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:9px 12px;resize:vertical;outline:none;transition:border-color .15s}
+textarea:focus,input[type=text]:focus{border-color:var(--accent)}
+textarea{min-height:72px}
+
+/* toggle row */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px}
+.toggle-row .label{font-size:13px;color:var(--text)}
+.toggle{position:relative;width:36px;height:20px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0;position:absolute}
+.toggle-track{position:absolute;inset:0;background:var(--border2);border-radius:10px;cursor:pointer;transition:background .2s}
+.toggle input:checked+.toggle-track{background:var(--accent)}
+.toggle-track::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s}
+.toggle input:checked+.toggle-track::after{transform:translateX(16px)}
+
+/* sub-panel */
+.sub-panel{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;margin-top:8px}
+.sub-panel.amber{border-color:var(--amber-dim);border-left:3px solid var(--amber)}
+.sub-panel.teal{border-color:var(--teal-dim);border-left:3px solid var(--teal)}
+.sub-panel.accent{border-left:3px solid var(--accent)}
+
+/* radio/select group */
+.radio-group{display:flex;flex-direction:column;gap:6px}
+.radio-opt{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:var(--radius-sm);border:1px solid var(--border);cursor:pointer;background:var(--bg4);transition:border-color .15s}
+.radio-opt:hover{border-color:var(--border2)}
+.radio-opt.selected{border-color:var(--accent);background:var(--accent-dim)}
+.radio-opt input{display:none}
+.radio-dot{width:14px;height:14px;border-radius:50%;border:1.5px solid var(--text3);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.radio-opt.selected .radio-dot{border-color:var(--accent);background:var(--accent)}
+.radio-opt.selected .radio-dot::after{content:'';width:5px;height:5px;border-radius:50%;background:#fff}
+.radio-label{font-size:12px;color:var(--text2)}
+.radio-opt.selected .radio-label{color:var(--text)}
+
+/* image source selector */
+.img-source-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.img-src-btn{padding:8px 10px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg4);cursor:pointer;font-size:11px;color:var(--text2);text-align:center;transition:all .15s}
+.img-src-btn:hover{border-color:var(--border2)}
+.img-src-btn.sel{border-color:var(--teal);background:var(--teal-dim);color:var(--teal)}
+
+/* mapping row */
+.map-row{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.map-row input{flex:1}
+.map-eq{color:var(--text3);font-family:'JetBrains Mono',monospace}
+.map-file{flex:2;background:var(--bg4);border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 10px;font-size:12px;color:var(--text2);cursor:pointer}
+.btn-add{padding:6px 12px;background:var(--accent-dim);border:1px solid var(--accent);border-radius:var(--radius-sm);color:var(--accent);font-size:11px;cursor:pointer;white-space:nowrap}
+.btn-add:hover{background:var(--accent);color:#fff}
+
+/* select */
+select{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:8px 12px;outline:none;width:100%;cursor:pointer}
+select:focus{border-color:var(--accent)}
+
+/* 2-col */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+
+/* mini input row */
+.inline-fields{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.inline-fields input[type=number]{width:80px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:13px;padding:7px 10px;outline:none}
+.inline-fields input[type=number]:focus{border-color:var(--accent)}
+.inline-fields .unit{font-size:11px;color:var(--text3)}
+
+/* credential block */
+.cred-block{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-bottom:8px}
+.cred-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cred-sns{font-size:12px;font-weight:600;color:var(--text)}
+.cred-toggle-row{display:flex;gap:6px}
+.cred-opt{padding:4px 10px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid var(--border);color:var(--text2);background:var(--bg4)}
+.cred-opt.active{border-color:var(--accent);background:var(--accent-dim);color:var(--accent)}
+
+/* submit */
+.submit-row{margin-top:28px;display:flex;justify-content:flex-end;gap:10px}
+.btn-cancel{padding:10px 20px;border-radius:var(--radius);border:1px solid var(--border);background:transparent;color:var(--text2);font-size:13px;cursor:pointer}
+.btn-submit{padding:10px 24px;border-radius:var(--radius);border:none;background:var(--accent);color:#fff;font-size:13px;font-weight:600;cursor:pointer;transition:background .15s}
+.btn-submit:hover{background:var(--accent2)}
+
+/* divider */
+.divider{height:1px;background:var(--border);margin:14px 0}
+
+/* chip row */
+.chip-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.chip{padding:4px 10px;border-radius:20px;font-size:11px;border:1px solid var(--border);color:var(--text2);cursor:pointer;background:var(--bg4)}
+.chip.sel{border-color:var(--accent);background:var(--accent-dim);color:var(--accent)}
+
+.sns-section-tag{display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;letter-spacing:.05em;margin-bottom:12px}
+.tag-note{background:#111;border:1px solid #333;color:#ccc}
+.tag-yt{background:#1a0000;border:1px solid #ff0000;color:#ff5555}
+.tag-ig{background:#1a0d1f;border:1px solid #cc2366;color:#e060a0}
+.tag-x{background:#0d0d0d;border:1px solid #333;color:#aaa}
+.tag-tt{background:#000;border:1px solid #444;color:#bbb}
+
+.indent{padding-left:14px;border-left:2px solid var(--border)}
+</style>
+
+<div class="shell">
+  <div class="header">
+    <div class="header-dot"></div>
+    <h1>プラン作成</h1>
+    <div class="step-badge">新規プラン</div>
+  </div>
+
+  <!-- STEP 1: SNS選択 -->
+  <div class="step">
+    <div class="step-title"><div class="step-num">1</div>投稿対象 SNS</div>
+    <div class="sns-grid">
+      <div class="sns-btn active" onclick="toggleSns(this,'note')">
+        <div class="sns-icon icon-note">N</div>
+        <div class="sns-name">NOTE</div>
+      </div>
+      <div class="sns-btn active" onclick="toggleSns(this,'yt')">
+        <div class="sns-icon icon-yt">
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M15.6 1.87C15.42.78 14.64.1 13.6 0 11.72-.1 8 0 8 0S4.28-.1 2.4 0C1.36.1.58.78.4 1.87 0 4 0 6 0 6s0 2 .4 4.13c.18 1.09.96 1.77 2 1.87C4.28 12 8 12 8 12s3.72 0 5.6-.1c1.04-.1 1.82-.78 2-1.87C16 8 16 6 16 6s0-2-.4-4.13zM6.4 8.5V3.5L11 6l-4.6 2.5z" fill="white"/></svg>
+        </div>
+        <div class="sns-name">YouTube</div>
+      </div>
+      <div class="sns-btn active" onclick="toggleSns(this,'ig')">
+        <div class="sns-icon icon-ig">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" stroke="white" stroke-width="2"/><circle cx="12" cy="12" r="4" stroke="white" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.2" fill="white"/></svg>
+        </div>
+        <div class="sns-name">Instagram</div>
+      </div>
+      <div class="sns-btn" onclick="toggleSns(this,'x')">
+        <div class="sns-icon icon-x">𝕏</div>
+        <div class="sns-name">X</div>
+      </div>
+      <div class="sns-btn" onclick="toggleSns(this,'tt')">
+        <div class="sns-icon icon-tt">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.77 1.52V6.76a4.85 4.85 0 0 1-1-.07z"/></svg>
+        </div>
+        <div class="sns-name">TikTok</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2: 基本設定 -->
+  <div class="step">
+    <div class="step-title"><div class="step-num">2</div>基本設定</div>
+
+    <div class="form-row">
+      <div class="form-label">ベースプロンプト <span class="badge-req">必須</span></div>
+      <textarea placeholder="投稿コンテンツの生成に使うメインのプロンプトを入力...">毎日の投資・資産形成に関する有益な情報を、初心者にもわかりやすく解説する記事を書いてください。</textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-label">個別指示 <span class="badge-opt">任意</span></div>
+      <textarea placeholder="追加の指示があれば...（例：必ず具体的な数字を入れる）" style="min-height:52px"></textarea>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="toggle-row">
+      <span class="label">外部データ読み込み</span>
+      <label class="toggle"><input type="checkbox" id="ext-toggle" checked onchange="togglePanel('ext-panel',this.checked)"><div class="toggle-track"></div></label>
+    </div>
+    <div class="sub-panel accent indent" id="ext-panel">
+      <div class="two-col" style="margin-bottom:8px">
+        <div class="form-row" style="margin:0">
+          <div class="form-label">データソースURL</div>
+          <input type="text" value="https://docs.google.com/spreadsheets/d/..."/>
+        </div>
+        <div class="form-row" style="margin:0">
+          <div class="form-label">分割サイズ（文字数）</div>
+          <input type="text" value="2000" style="font-family:'JetBrains Mono',monospace"/>
+        </div>
+      </div>
+      <div class="form-label">分割処理</div>
+      <div class="chip-row">
+        <div class="chip sel">先頭から順番</div>
+        <div class="chip">ランダム</div>
+        <div class="chip">全件まとめて</div>
+      </div>
+    </div>
+
+    <div class="toggle-row" style="margin-top:8px">
+      <span class="label">あらすじ利用</span>
+      <label class="toggle"><input type="checkbox" id="synopsis-toggle" onchange="togglePanel('synopsis-panel',this.checked)"><div class="toggle-track"></div></label>
+    </div>
+    <div class="sub-panel accent indent" id="synopsis-panel" style="display:none">
+      <div class="three-col" style="margin-bottom:10px">
+        <div class="form-row" style="margin:0">
+          <div class="form-label">文字数</div>
+          <input type="text" value="500" style="font-family:'JetBrains Mono',monospace"/>
+        </div>
+        <div class="form-row" style="margin:0">
+          <div class="form-label">保存件数</div>
+          <input type="text" value="30" style="font-family:'JetBrains Mono',monospace"/>
+        </div>
+        <div class="form-row" style="margin:0">
+          <div class="form-label">注入件数</div>
+          <input type="text" value="5" style="font-family:'JetBrains Mono',monospace"/>
+        </div>
+      </div>
+      <div class="form-row" style="margin:0">
+        <div class="form-label">あらすじプロンプト</div>
+        <textarea placeholder="あらすじ生成の指示を入力..." style="min-height:52px"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2-5: NOTE設定 -->
+  <div class="step" id="note-section">
+    <div class="step-title"><div class="step-num">2-5</div>NOTE 設定</div>
+    <div class="sns-section-tag tag-note">NOTE</div>
+
+    <div class="form-row">
+      <div class="form-label">NOTE専用個別指示 <span class="badge-opt">任意</span></div>
+      <textarea placeholder="NOTE記事に特化した追加指示（文体、構成、文字数など）" style="min-height:52px"></textarea>
+    </div>
+    <div class="divider"></div>
+    <div class="form-label">サムネイル画像モード</div>
+    <div class="radio-group" style="margin-bottom:10px">
+      <div class="radio-opt" onclick="selectRadio(this,'note-thumb')">
+        <div class="radio-dot"></div>
+        <div class="radio-label">既存画像そのまま（マッピング）</div>
+      </div>
+      <div class="radio-opt selected" onclick="selectRadio(this,'note-thumb')">
+        <div class="radio-dot"></div>
+        <div class="radio-label">全部生成</div>
+      </div>
+      <div class="radio-opt" onclick="selectRadio(this,'note-thumb')">
+        <div class="radio-dot"></div>
+        <div class="radio-label">既存画像に文字だけ入れる</div>
+      </div>
+      <div class="radio-opt" onclick="selectRadio(this,'note-thumb')">
+        <div class="radio-dot"></div>
+        <div class="radio-label">なし</div>
+      </div>
+    </div>
+    <div class="sub-panel teal">
+      <div class="form-label" style="margin-bottom:8px">生成プロンプト</div>
+      <textarea placeholder="サムネイル画像の生成プロンプト（DALL-E / Imagen等）" style="min-height:56px">金融・投資をテーマにした洗練されたアイキャッチ画像。グラフや数字を取り入れたデザイン。</textarea>
+    </div>
+  </div>
+
+  <!-- STEP 2-5: YouTube設定 -->
+  <div class="step" id="yt-section">
+    <div class="step-title"><div class="step-num">2-5</div>YouTube 設定</div>
+    <div class="sns-section-tag tag-yt">YouTube</div>
+
+    <div class="two-col" style="margin-bottom:12px">
+      <div class="form-row" style="margin:0">
+        <div class="form-label">動画タイプ</div>
+        <select>
+          <option>長尺動画</option>
+          <option>Shorts（縦型 60秒以内）</option>
+        </select>
+      </div>
+      <div class="form-row" style="margin:0">
+        <div class="form-label">公開設定</div>
+        <select>
+          <option>公開</option>
+          <option>非公開</option>
+          <option>限定公開</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-label" style="margin-bottom:8px">サムネイルモード</div>
+    <div class="radio-group" style="margin-bottom:10px">
+      <div class="radio-opt" onclick="selectRadio(this,'yt-thumb')">
+        <div class="radio-dot"></div><div class="radio-label">既存画像そのまま（マッピング）</div>
+      </div>
+      <div class="radio-opt selected" onclick="selectRadio(this,'yt-thumb')">
+        <div class="radio-dot"></div><div class="radio-label">全部生成</div>
+      </div>
+      <div class="radio-opt" onclick="selectRadio(this,'yt-thumb')">
+        <div class="radio-dot"></div><div class="radio-label">既存画像に文字だけ入れる</div>
+      </div>
+      <div class="radio-opt" onclick="selectRadio(this,'yt-thumb')">
+        <div class="radio-dot"></div><div class="radio-label">なし（YouTube自動生成）</div>
+      </div>
+    </div>
+    <div class="sub-panel teal">
+      <div class="form-label" style="margin-bottom:8px">生成プロンプト</div>
+      <textarea placeholder="YouTubeサムネイルの生成プロンプト" style="min-height:52px"></textarea>
+    </div>
+  </div>
+
+  <!-- STEP 2-5: Instagram設定 -->
+  <div class="step" id="ig-section">
+    <div class="step-title"><div class="step-num">2-5</div>Instagram 設定</div>
+    <div class="sns-section-tag tag-ig">Instagram</div>
+
+    <div class="form-row">
+      <div class="form-label">Instagram専用個別指示 <span class="badge-opt">任意</span></div>
+      <textarea placeholder="Instagram投稿に特化した追加指示（ハッシュタグ、トーンなど）" style="min-height:52px"></textarea>
+    </div>
+    <div class="divider"></div>
+    <div class="form-label" style="margin-bottom:8px">投稿画像ソース</div>
+    <div class="radio-group">
+      <div class="radio-opt selected" onclick="selectRadio(this,'ig-img')">
+        <div class="radio-dot"></div><div class="radio-label">別SNSから流用（NOTEサムネイルなど）</div>
+      </div>
+      <div class="radio-opt" onclick="selectRadio(this,'ig-img')">
+        <div class="radio-dot"></div><div class="radio-label">独自生成</div>
+      </div>
+      <div class="radio-opt" onclick="selectRadio(this,'ig-img')">
+        <div class="radio-dot"></div><div class="radio-label">ライブラリ固定（マッピング）</div>
+      </div>
+      <div class="radio-opt" onclick="selectRadio(this,'ig-img')">
+        <div class="radio-dot"></div><div class="radio-label">なし</div>
+      </div>
+    </div>
+    <div class="sub-panel teal" style="margin-top:8px">
+      <div class="form-label" style="margin-bottom:6px">流用元SNS</div>
+      <select><option>NOTEサムネイル（文字入れ後）</option><option>NOTEサムネイル（文字入れ前・生画像）</option><option>YouTube サムネイル</option></select>
+    </div>
+  </div>
+
+  <!-- STEP 3: 動画生成 -->
+  <div class="step">
+    <div class="step-title"><div class="step-num">3</div>動画生成設定</div>
+    <div class="toggle-row">
+      <span class="label">動画生成を有効化</span>
+      <label class="toggle"><input type="checkbox" id="video-toggle" checked onchange="togglePanel('video-panel',this.checked)"><div class="toggle-track"></div></label>
+    </div>
+    <div id="video-panel">
+      <div class="two-col" style="margin:10px 0">
+        <div class="form-row" style="margin:0">
+          <div class="form-label">縦横比</div>
+          <select>
+            <option>縦動画（9:16）</option>
+            <option>横動画（16:9）</option>
+            <option>正方形（1:1）</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-label" style="margin-bottom:8px">動画生成モード</div>
+      <div class="radio-group">
+        <div class="radio-opt" onclick="selectRadio(this,'vid-mode')">
+          <div class="radio-dot"></div><div class="radio-label">Runway — アップロード動画からクリップ生成</div>
+        </div>
+        <div class="radio-opt selected" onclick="selectRadio(this,'vid-mode')">
+          <div class="radio-dot"></div><div class="radio-label">Veo3 — プロンプトから1から生成</div>
+        </div>
+        <div class="radio-opt" onclick="selectRadio(this,'vid-mode')">
+          <div class="radio-dot"></div><div class="radio-label">Veo3 フレーム補間 — 開始・終了画像から生成</div>
+        </div>
+        <div class="radio-opt" onclick="selectRadio(this,'vid-mode')">
+          <div class="radio-dot"></div><div class="radio-label">既存動画に文字だけ入れる</div>
+        </div>
+      </div>
+      <div class="sub-panel teal" style="margin-top:10px">
+        <div class="form-label" style="margin-bottom:6px">動画生成プロンプト</div>
+        <textarea placeholder="Veo3で生成する動画のプロンプト（英語推奨）" style="min-height:56px">A smooth cinematic animation of financial data visualizations, modern and clean aesthetic, blue and gold color palette.</textarea>
+        <div class="divider"></div>
+        <div class="form-label" style="margin-bottom:6px">文字入れ設定</div>
+        <div class="two-col">
+          <div><div class="form-label">テキスト内容</div><input type="text" value="{{title}}"/></div>
+          <div><div class="form-label">位置</div><select><option>中央</option><option>上部</option><option>下部</option></select></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4: 投稿頻度 -->
+  <div class="step">
+    <div class="step-title"><div class="step-num">4</div>投稿頻度</div>
+    <div class="form-label" style="margin-bottom:8px">スケジュール</div>
+    <div class="chip-row" style="margin-bottom:12px">
+      <div class="chip sel">毎日</div>
+      <div class="chip">曜日指定</div>
+      <div class="chip">スプレッドシート</div>
+    </div>
+    <div class="form-row">
+      <div class="form-label">投稿時間</div>
+      <div class="inline-fields">
+        <input type="text" value="07" style="width:56px;font-family:'JetBrains Mono',monospace;text-align:center"/>
+        <span class="unit">時</span>
+        <input type="text" value="00" style="width:56px;font-family:'JetBrains Mono',monospace;text-align:center"/>
+        <span class="unit">分</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 5: 認証情報 -->
+  <div class="step">
+    <div class="step-title"><div class="step-num">5</div>認証情報</div>
+
+    <div class="cred-block">
+      <div class="cred-header">
+        <div class="cred-sns">NOTE</div>
+        <div class="cred-toggle-row">
+          <div class="cred-opt active">組織デフォルト</div>
+          <div class="cred-opt">カスタム</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cred-block">
+      <div class="cred-header">
+        <div class="cred-sns">YouTube</div>
+        <div class="cred-toggle-row">
+          <div class="cred-opt active">組織デフォルト</div>
+          <div class="cred-opt">カスタム</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cred-block">
+      <div class="cred-header">
+        <div class="cred-sns">Instagram</div>
+        <div class="cred-toggle-row">
+          <div class="cred-opt">組織デフォルト</div>
+          <div class="cred-opt active">カスタム</div>
+        </div>
+      </div>
+      <div class="two-col">
+        <div><div class="form-label">アカウントID</div><input type="text" value="@invest_daily_jp"/></div>
+        <div><div class="form-label">アクセストークン</div><input type="text" value="••••••••••••••••"/></div>
+      </div>
+    </div>
+
+    <div class="cred-block">
+      <div class="cred-header">
+        <div class="cred-sns">OpenAI APIキー</div>
+        <div class="cred-toggle-row">
+          <div class="cred-opt active">組織デフォルト</div>
+          <div class="cred-opt">カスタム</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cred-block">
+      <div class="cred-header">
+        <div class="cred-sns">Veo3 サービスアカウント</div>
+        <div class="cred-toggle-row">
+          <div class="cred-opt active">組織デフォルト</div>
+          <div class="cred-opt">カスタム</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="submit-row">
+    <button class="btn-cancel">キャンセル</button>
+    <button class="btn-submit">プランを作成</button>
+  </div>
+</div>
+
+<script>
+function toggleSns(el,id){
+  el.classList.toggle('active');
+}
+function togglePanel(id,show){
+  const el=document.getElementById(id);
+  if(el) el.style.display=show?'':'none';
+}
+function selectRadio(el,group){
+  el.closest('.radio-group').querySelectorAll('.radio-opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+document.querySelectorAll('.chip-row .chip').forEach(c=>{
+  c.addEventListener('click',function(){
+    this.closest('.chip-row').querySelectorAll('.chip').forEach(x=>x.classList.remove('sel'));
+    this.classList.add('sel');
+  });
+});
+document.querySelectorAll('.cred-block').forEach(block=>{
+  block.querySelectorAll('.cred-opt').forEach(opt=>{
+    opt.addEventListener('click',function(){
+      block.querySelectorAll('.cred-opt').forEach(o=>o.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+});
+</script>
