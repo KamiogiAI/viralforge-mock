@@ -251,35 +251,40 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 
 <!-- ===== モーダル: プラン作成ウィザード ===== -->
 <div id="planModal" class="modal">
-  <div class="modal-content">
+  <div class="modal-content" style="max-width:900px;">
     <div class="modal-header">
       <h2>プラン作成</h2>
       <button class="close-btn" onclick="closePlanModal()">&times;</button>
     </div>
     <div class="modal-body">
 
-      <!-- ウィザードステップバー -->
-      <div class="wiz-bar">
-        <div class="wstep active" id="wi1"><div class="wstep-c">1</div><div class="wstep-l">投稿対象SNS</div></div>
+      <!-- ウィザードステップバー (6大ステップ) -->
+      <div class="wiz-bar" style="margin-bottom:6px;">
+        <div class="wstep active" id="wi1"><div class="wstep-c">1</div><div class="wstep-l">SNS選択</div></div>
         <div class="wstep" id="wi2"><div class="wstep-c">2</div><div class="wstep-l">基本設定</div></div>
+        <div class="wstep" id="wi25"><div class="wstep-c">2-5</div><div class="wstep-l">SNS別設定</div></div>
         <div class="wstep" id="wi3"><div class="wstep-c">3</div><div class="wstep-l">動画生成</div></div>
         <div class="wstep" id="wi4"><div class="wstep-c">4</div><div class="wstep-l">スケジュール</div></div>
         <div class="wstep" id="wi5"><div class="wstep-c">5</div><div class="wstep-l">認証情報</div></div>
       </div>
+      <!-- SNS別設定中のサブ表示 -->
+      <div id="subStepBar" style="display:none;text-align:center;font-size:12px;color:var(--gray-light);margin-bottom:16px;padding:4px 0;border-bottom:1px solid var(--border);">
+        <span id="subStepLabel"></span>
+      </div>
 
-      <!-- STEP1: SNS選択 -->
+      <!-- PAGE 1: SNS選択 -->
       <div class="tab-panel active" id="ps1">
         <p style="font-size:13px;color:var(--gray-light);margin-bottom:16px;">投稿するSNSを選択してください（複数選択可）</p>
         <div class="sns-grid">
-          <div class="sns-card sel" onclick="toggleSNS(this)"><div class="sns-icon">📝</div><div class="sns-name">NOTE</div><span class="sns-status ok">認証済み</span></div>
-          <div class="sns-card sel" onclick="toggleSNS(this)"><div class="sns-icon">▶️</div><div class="sns-name">YouTube</div><span class="sns-status ok">認証済み</span></div>
-          <div class="sns-card sel" onclick="toggleSNS(this)"><div class="sns-icon">📸</div><div class="sns-name">Instagram</div><span class="sns-status ok">認証済み</span></div>
-          <div class="sns-card" onclick="toggleSNS(this)"><div class="sns-icon">𝕏</div><div class="sns-name">X</div><span class="sns-status warn">未登録</span></div>
-          <div class="sns-card" onclick="toggleSNS(this)"><div class="sns-icon">🎵</div><div class="sns-name">TikTok</div><span class="sns-status warn">未登録</span></div>
+          <div class="sns-card sel" id="sns-note" onclick="toggleSNS(this)"><div class="sns-icon">📝</div><div class="sns-name">NOTE</div><span class="sns-status ok">認証済み</span></div>
+          <div class="sns-card sel" id="sns-yt" onclick="toggleSNS(this)"><div class="sns-icon">▶️</div><div class="sns-name">YouTube</div><span class="sns-status ok">認証済み</span></div>
+          <div class="sns-card sel" id="sns-ig" onclick="toggleSNS(this)"><div class="sns-icon">📸</div><div class="sns-name">Instagram</div><span class="sns-status ok">認証済み</span></div>
+          <div class="sns-card" id="sns-x" onclick="toggleSNS(this)"><div class="sns-icon">𝕏</div><div class="sns-name">X</div><span class="sns-status warn">未登録</span></div>
+          <div class="sns-card" id="sns-tt" onclick="toggleSNS(this)"><div class="sns-icon">🎵</div><div class="sns-name">TikTok</div><span class="sns-status warn">未登録</span></div>
         </div>
       </div>
 
-      <!-- STEP2: 基本設定 -->
+      <!-- PAGE 2: 基本設定 -->
       <div class="tab-panel" id="ps2">
         <div class="form-group">
           <label>ベースプロンプト <span class="badge badge-req">必須</span></label>
@@ -290,11 +295,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
           <textarea placeholder="追加の指示があれば..." style="min-height:60px;"></textarea>
         </div>
         <div class="divider"></div>
+
+        <!-- 外部データ -->
         <div class="toggle-row">
-          <div><div class="toggle-label">外部データ読み込み</div></div>
+          <div><div class="toggle-label">外部データ読み込み</div><div class="toggle-sub">スプレッドシートやCSVからデータを分割して注入</div></div>
           <div class="toggle on" onclick="this.classList.toggle('on');togglePanel('extPanel',this.classList.contains('on'))"></div>
         </div>
-        <div class="sub-panel" id="extPanel">
+        <div class="sub-panel" id="extPanel" style="margin-bottom:0;">
           <div class="two-col">
             <div class="form-group" style="margin:0;"><label>データソースURL</label><input type="text" value="https://docs.google.com/spreadsheets/d/..."/></div>
             <div class="form-group" style="margin:0;"><label>分割サイズ（文字数）</label><input type="text" value="2000"/></div>
@@ -309,94 +316,146 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
           </div>
         </div>
 
-        <!-- SNS別設定 -->
         <div class="divider"></div>
-        <h4 style="font-size:14px;font-weight:700;color:var(--blue-dark);margin-bottom:16px;">SNS別設定</h4>
 
-        <!-- NOTE設定 -->
-        <div style="border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:16px;">
-          <div class="section-tag tag-note">NOTE</div>
-          <div class="form-group">
-            <label>NOTE専用個別指示 <span class="badge badge-opt">任意</span></label>
-            <textarea placeholder="NOTE記事に特化した追加指示（文体、構成、文字数など）" style="min-height:50px;"></textarea>
-          </div>
-          <label style="font-size:12px;font-weight:600;color:var(--gray-dark);margin-bottom:8px;display:block;">サムネイル画像モード</label>
-          <div class="radio-group">
-            <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">既存画像そのまま（マッピング）</div></div>
-            <div class="radio-opt selected" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">全部生成</div></div>
-            <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">既存画像に文字だけ入れる</div></div>
-            <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">なし</div></div>
-          </div>
-          <div class="sub-panel teal" style="margin-top:12px;">
-            <div class="form-group" style="margin:0;">
-              <label>生成プロンプト</label>
-              <textarea style="min-height:50px;">金融・投資をテーマにした洗練されたアイキャッチ画像。グラフや数字を取り入れたデザイン。</textarea>
-            </div>
-          </div>
+        <!-- あらすじ -->
+        <div class="toggle-row">
+          <div><div class="toggle-label">あらすじ利用</div><div class="toggle-sub">過去の投稿のあらすじをプロンプトに自動注入して重複を防ぐ</div></div>
+          <div class="toggle" onclick="this.classList.toggle('on');togglePanel('synopsisPanel',this.classList.contains('on'))"></div>
         </div>
-
-        <!-- YouTube設定 -->
-        <div style="border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:16px;">
-          <div class="section-tag tag-yt">YouTube</div>
-          <div class="two-col" style="margin-bottom:12px;">
-            <div class="form-group" style="margin:0;"><label>動画タイプ</label><select><option>長尺動画</option><option>Shorts（縦型60秒以内）</option></select></div>
-            <div class="form-group" style="margin:0;"><label>公開設定</label><select><option>公開</option><option>非公開</option><option>限定公開</option></select></div>
+        <div class="sub-panel" id="synopsisPanel" style="display:none;">
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;">
+            <div class="form-group" style="margin:0;"><label>あらすじ文字数</label><input type="text" value="500"/></div>
+            <div class="form-group" style="margin:0;"><label>最大保存件数</label><input type="text" value="30"/></div>
+            <div class="form-group" style="margin:0;"><label>注入件数</label><input type="text" value="5"/></div>
           </div>
-          <label style="font-size:12px;font-weight:600;color:var(--gray-dark);margin-bottom:8px;display:block;">サムネイルモード</label>
-          <div class="radio-group">
-            <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">既存画像そのまま（マッピング）</div></div>
-            <div class="radio-opt selected" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">全部生成</div></div>
-            <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">既存画像に文字だけ入れる</div></div>
-            <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">なし（YouTube自動生成）</div></div>
-          </div>
-        </div>
-
-        <!-- Instagram設定 -->
-        <div style="border:1px solid var(--border);border-radius:8px;padding:16px;">
-          <div class="section-tag tag-ig">Instagram</div>
-          <div class="form-group">
-            <label>Instagram専用個別指示 <span class="badge badge-opt">任意</span></label>
-            <textarea placeholder="Instagram投稿に特化した追加指示（ハッシュタグ、トーンなど）" style="min-height:50px;"></textarea>
-          </div>
-          <label style="font-size:12px;font-weight:600;color:var(--gray-dark);margin-bottom:8px;display:block;">投稿画像ソース</label>
-          <div class="radio-group">
-            <div class="radio-opt selected" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">別SNSから流用（NOTEサムネイルなど）</div></div>
-            <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">独自生成</div></div>
-            <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">ライブラリ固定（マッピング）</div></div>
-            <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">なし</div></div>
-          </div>
-          <div class="sub-panel" style="margin-top:12px;">
-            <div class="two-col">
-              <div class="form-group" style="margin:0;"><label>流用元SNS</label><select><option>NOTEサムネイル（文字入れ後）</option><option>NOTEサムネイル（文字入れ前）</option><option>YouTubeサムネイル</option></select></div>
-              <div class="form-group" style="margin:0;"><label>バージョン</label><select><option>文字入れ後</option><option>文字入れ前（生画像）</option></select></div>
-            </div>
-            <p style="font-size:11px;color:var(--gray-light);margin-top:8px;padding:6px 10px;background:var(--blue-bg);border-radius:4px;border-left:3px solid var(--blue-mid);">NOTEサムネイル生成後に自動で取得。NOTEが未選択の場合は使用不可。</p>
+          <div class="form-group" style="margin:0;">
+            <label>あらすじプロンプト</label>
+            <textarea placeholder="あらすじ生成の指示を入力..." style="min-height:50px;"></textarea>
           </div>
         </div>
       </div>
 
-      <!-- STEP3: 動画生成設定 -->
+      <!-- PAGE 3: NOTE設定 -->
+      <div class="tab-panel" id="ps-note">
+        <div class="section-tag tag-note">NOTE</div>
+        <div class="form-group">
+          <label>NOTE専用個別指示 <span class="badge badge-opt">任意</span></label>
+          <textarea placeholder="NOTE記事に特化した追加指示（文体、構成、文字数など）" style="min-height:60px;"></textarea>
+          <small>共通ベースプロンプトに追加で適用されます</small>
+        </div>
+        <div class="divider"></div>
+        <label style="font-size:13px;font-weight:700;color:var(--gray-dark);margin-bottom:10px;display:block;">サムネイル画像モード</label>
+        <div class="radio-group">
+          <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">既存画像そのまま（マッピング）</div></div>
+          <div class="radio-opt selected" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">全部生成</div></div>
+          <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">既存画像に文字だけ入れる</div></div>
+          <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">なし</div></div>
+        </div>
+        <div class="sub-panel teal" style="margin-top:12px;">
+          <div class="form-group" style="margin:0;"><label>生成プロンプト</label>
+            <textarea style="min-height:50px;">金融・投資をテーマにした洗練されたアイキャッチ画像。グラフや数字を取り入れたデザイン。</textarea>
+          </div>
+        </div>
+        <p style="font-size:11px;color:var(--gray-light);margin-top:10px;padding:6px 10px;background:var(--blue-bg);border-radius:4px;border-left:3px solid var(--blue-mid);">生成後「文字入れ前（_raw）」と「文字入れ後（_with_text）」の両方を保存 → 他SNSから参照可能</p>
+      </div>
+
+      <!-- PAGE 4: YouTube設定 -->
+      <div class="tab-panel" id="ps-yt">
+        <div class="section-tag tag-yt">YouTube</div>
+        <div class="two-col" style="margin-bottom:16px;">
+          <div class="form-group" style="margin:0;"><label>動画タイプ</label><select><option>長尺動画</option><option>Shorts（縦型60秒以内）</option></select></div>
+          <div class="form-group" style="margin:0;"><label>公開設定</label><select><option>公開</option><option>非公開</option><option>限定公開</option></select></div>
+        </div>
+        <div class="divider"></div>
+        <label style="font-size:13px;font-weight:700;color:var(--gray-dark);margin-bottom:10px;display:block;">サムネイルモード</label>
+        <div class="radio-group">
+          <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">既存画像そのまま（マッピング）</div></div>
+          <div class="radio-opt selected" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">全部生成</div></div>
+          <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">既存画像に文字だけ入れる</div></div>
+          <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">なし（YouTube自動生成）</div></div>
+        </div>
+        <div class="sub-panel teal" style="margin-top:12px;">
+          <div class="form-group" style="margin:0;"><label>生成プロンプト</label>
+            <textarea placeholder="YouTubeサムネイルの生成プロンプト" style="min-height:50px;"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAGE 5: Instagram設定 -->
+      <div class="tab-panel" id="ps-ig">
+        <div class="section-tag tag-ig">Instagram</div>
+        <div class="form-group">
+          <label>Instagram専用個別指示 <span class="badge badge-opt">任意</span></label>
+          <textarea placeholder="Instagram投稿に特化した追加指示（ハッシュタグ、トーンなど）" style="min-height:60px;"></textarea>
+        </div>
+        <div class="divider"></div>
+        <label style="font-size:13px;font-weight:700;color:var(--gray-dark);margin-bottom:10px;display:block;">投稿画像ソース</label>
+        <div class="radio-group">
+          <div class="radio-opt selected" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">別SNSから流用（NOTEサムネイルなど）</div></div>
+          <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">独自生成</div></div>
+          <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">ライブラリ固定（マッピング）</div></div>
+          <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">なし</div></div>
+        </div>
+        <div class="sub-panel" style="margin-top:12px;">
+          <div class="two-col">
+            <div class="form-group" style="margin:0;"><label>流用元SNS</label><select><option>NOTEサムネイル（文字入れ後）</option><option>NOTEサムネイル（文字入れ前）</option><option>YouTubeサムネイル</option></select></div>
+            <div class="form-group" style="margin:0;"><label>バージョン</label><select><option>文字入れ後</option><option>文字入れ前（生画像）</option></select></div>
+          </div>
+          <p style="font-size:11px;color:var(--gray-light);margin-top:8px;padding:6px 10px;background:var(--white);border-radius:4px;border-left:3px solid var(--blue-mid);">NOTEサムネイル生成後に自動で取得。NOTEが未選択の場合は使用不可。</p>
+        </div>
+      </div>
+
+      <!-- PAGE 6: X設定 -->
+      <div class="tab-panel" id="ps-x">
+        <div class="section-tag tag-x">X</div>
+        <div class="form-group">
+          <label>X専用個別指示 <span class="badge badge-opt">任意</span></label>
+          <textarea placeholder="例：ハッシュタグを2〜3個つける。280字以内で端的に。" style="min-height:60px;"></textarea>
+        </div>
+        <div class="divider"></div>
+        <label style="font-size:13px;font-weight:700;color:var(--gray-dark);margin-bottom:10px;display:block;">投稿画像ソース</label>
+        <div class="radio-group">
+          <div class="radio-opt selected" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">別SNSから流用（NOTEサムネイルなど）</div></div>
+          <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">独自生成</div></div>
+          <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">ライブラリ固定（マッピング）</div></div>
+          <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">なし</div></div>
+        </div>
+        <div class="form-group" style="margin-top:16px;"><label>画像枚数（1〜4）</label><input type="text" value="1" style="max-width:60px;"/></div>
+      </div>
+
+      <!-- PAGE 7: TikTok設定 -->
+      <div class="tab-panel" id="ps-tt">
+        <div class="section-tag tag-tt">TikTok</div>
+        <div class="form-group">
+          <label>TikTok専用個別指示 <span class="badge badge-opt">任意</span></label>
+          <textarea placeholder="例：トレンドのハッシュタグを多めに入れる" style="min-height:60px;"></textarea>
+        </div>
+        <div class="divider"></div>
+        <label style="font-size:13px;font-weight:700;color:var(--gray-dark);margin-bottom:10px;display:block;">投稿タイプ</label>
+        <div class="radio-group">
+          <div class="radio-opt selected" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">動画（最大60秒）</div></div>
+          <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">写真（最大4枚）</div></div>
+        </div>
+        <div class="form-group" style="margin-top:16px;"><label>動画向き</label><select style="max-width:200px;"><option>縦（9:16）</option><option>横（16:9）→ 縦に自動変換</option></select></div>
+      </div>
+
+      <!-- PAGE 8: 動画生成設定 -->
       <div class="tab-panel" id="ps3">
         <div class="toggle-row" style="margin-bottom:16px;">
           <div><div class="toggle-label">動画生成を有効化</div></div>
           <div class="toggle on" onclick="this.classList.toggle('on');togglePanel('videoPanel',this.classList.contains('on'))"></div>
         </div>
         <div id="videoPanel">
-          <div class="form-group">
-            <label>縦横比</label>
-            <select style="max-width:200px;"><option>縦動画（9:16）</option><option>横動画（16:9）</option><option>正方形（1:1）</option></select>
-          </div>
-          <label style="font-size:12px;font-weight:600;color:var(--gray-dark);margin-bottom:8px;display:block;">動画生成モード</label>
+          <div class="form-group"><label>縦横比</label><select style="max-width:200px;"><option>縦動画（9:16）</option><option>横動画（16:9）</option><option>正方形（1:1）</option></select></div>
+          <label style="font-size:13px;font-weight:700;color:var(--gray-dark);margin-bottom:10px;display:block;">動画生成モード</label>
           <div class="radio-group">
             <div class="radio-opt selected" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">Veo3 — プロンプトから1から生成</div></div>
             <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">Veo3 フレーム補間 — 開始・終了画像から生成</div></div>
             <div class="radio-opt" onclick="selectRadio(this)"><div class="radio-dot"></div><div class="radio-label">既存動画に文字だけ入れる</div></div>
           </div>
           <div class="sub-panel teal" style="margin-top:16px;">
-            <div class="form-group">
-              <label>動画生成プロンプト</label>
-              <textarea style="min-height:60px;">A smooth cinematic animation of financial data visualizations, modern and clean aesthetic, blue and gold color palette.</textarea>
-            </div>
+            <div class="form-group"><label>動画生成プロンプト</label><textarea style="min-height:60px;">A smooth cinematic animation of financial data visualizations, modern and clean aesthetic, blue and gold color palette.</textarea></div>
             <div class="divider"></div>
             <label style="font-size:12px;font-weight:600;color:var(--gray-dark);margin-bottom:8px;display:block;">文字入れ設定</label>
             <div class="two-col">
@@ -407,9 +466,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         </div>
       </div>
 
-      <!-- STEP4: スケジュール -->
+      <!-- PAGE 9: スケジュール -->
       <div class="tab-panel" id="ps4">
-        <label style="font-size:12px;font-weight:600;color:var(--gray-dark);margin-bottom:8px;display:block;">スケジュール</label>
+        <label style="font-size:13px;font-weight:700;color:var(--gray-dark);margin-bottom:10px;display:block;">投稿スケジュール</label>
         <div class="chip-row" style="margin-bottom:16px;">
           <div class="chip sel" onclick="selChip(this)">毎日</div>
           <div class="chip" onclick="selChip(this)">曜日指定</div>
@@ -419,70 +478,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
           <label>投稿時間</label>
           <div style="display:flex;gap:10px;align-items:center;">
             <input type="text" value="07" style="width:60px;text-align:center;"/>
-            <span>時</span>
+            <span style="color:var(--gray);">時</span>
             <input type="text" value="00" style="width:60px;text-align:center;"/>
-            <span>分</span>
+            <span style="color:var(--gray);">分</span>
           </div>
         </div>
       </div>
 
-      <!-- STEP5: 認証情報 -->
+      <!-- PAGE 10: 認証情報 -->
       <div class="tab-panel" id="ps5">
-        <p style="font-size:13px;color:var(--gray-light);margin-bottom:16px;">プラン専用の認証情報を設定します。未設定の場合は組織のデフォルト認証情報が使用されます。</p>
-        
+        <p style="font-size:13px;color:var(--gray-light);margin-bottom:16px;">プラン専用の認証情報を設定します。未設定の場合は組織のデフォルトが使用されます。</p>
+        <div class="cred-block"><div class="cred-header"><div class="cred-sns">📝 NOTE</div><div class="cred-toggle"><div class="cred-opt active" onclick="selCredOpt(this)">組織デフォルト</div><div class="cred-opt" onclick="selCredOpt(this)">カスタム</div></div></div></div>
+        <div class="cred-block"><div class="cred-header"><div class="cred-sns">▶️ YouTube</div><div class="cred-toggle"><div class="cred-opt active" onclick="selCredOpt(this)">組織デフォルト</div><div class="cred-opt" onclick="selCredOpt(this)">カスタム</div></div></div></div>
         <div class="cred-block">
-          <div class="cred-header">
-            <div class="cred-sns">📝 NOTE</div>
-            <div class="cred-toggle">
-              <div class="cred-opt active" onclick="selCredOpt(this)">組織デフォルト</div>
-              <div class="cred-opt" onclick="selCredOpt(this)">カスタム</div>
-            </div>
-          </div>
+          <div class="cred-header"><div class="cred-sns">📸 Instagram</div><div class="cred-toggle"><div class="cred-opt" onclick="selCredOpt(this)">組織デフォルト</div><div class="cred-opt active" onclick="selCredOpt(this)">カスタム</div></div></div>
+          <div class="two-col" style="margin-top:12px;"><div class="form-group" style="margin:0;"><label>アカウントID</label><input type="text" value="@invest_daily_jp"/></div><div class="form-group" style="margin:0;"><label>アクセストークン</label><input type="password" value="••••••••••••••••"/></div></div>
         </div>
-
-        <div class="cred-block">
-          <div class="cred-header">
-            <div class="cred-sns">▶️ YouTube</div>
-            <div class="cred-toggle">
-              <div class="cred-opt active" onclick="selCredOpt(this)">組織デフォルト</div>
-              <div class="cred-opt" onclick="selCredOpt(this)">カスタム</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="cred-block">
-          <div class="cred-header">
-            <div class="cred-sns">📸 Instagram</div>
-            <div class="cred-toggle">
-              <div class="cred-opt" onclick="selCredOpt(this)">組織デフォルト</div>
-              <div class="cred-opt active" onclick="selCredOpt(this)">カスタム</div>
-            </div>
-          </div>
-          <div class="two-col" style="margin-top:12px;">
-            <div class="form-group" style="margin:0;"><label>アカウントID</label><input type="text" value="@invest_daily_jp"/></div>
-            <div class="form-group" style="margin:0;"><label>アクセストークン</label><input type="password" value="••••••••••••••••"/></div>
-          </div>
-        </div>
-
-        <div class="cred-block">
-          <div class="cred-header">
-            <div class="cred-sns">🤖 OpenAI APIキー</div>
-            <div class="cred-toggle">
-              <div class="cred-opt active" onclick="selCredOpt(this)">組織デフォルト</div>
-              <div class="cred-opt" onclick="selCredOpt(this)">カスタム</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="cred-block">
-          <div class="cred-header">
-            <div class="cred-sns">🎬 Veo3 サービスアカウント</div>
-            <div class="cred-toggle">
-              <div class="cred-opt active" onclick="selCredOpt(this)">組織デフォルト</div>
-              <div class="cred-opt" onclick="selCredOpt(this)">カスタム</div>
-            </div>
-          </div>
-        </div>
+        <div class="cred-block"><div class="cred-header"><div class="cred-sns">🤖 OpenAI APIキー</div><div class="cred-toggle"><div class="cred-opt active" onclick="selCredOpt(this)">組織デフォルト</div><div class="cred-opt" onclick="selCredOpt(this)">カスタム</div></div></div></div>
+        <div class="cred-block"><div class="cred-header"><div class="cred-sns">🎬 Veo3 サービスアカウント</div><div class="cred-toggle"><div class="cred-opt active" onclick="selCredOpt(this)">組織デフォルト</div><div class="cred-opt" onclick="selCredOpt(this)">カスタム</div></div></div></div>
       </div>
 
     </div>
@@ -855,30 +868,83 @@ function switchRole() {
 }
 switchRole();
 
-// プランウィザード
-var planStep = 1;
-function openPlanModal() { document.getElementById('planModal').classList.add('active'); goPTab(1); }
+// プランウィザード（動的SNS対応）
+// pages: 1=SNS選択, 2=基本設定, 3..=SNS別設定(選択したSNSの数だけ), last-2=動画生成, last-1=スケジュール, last=認証
+var planPages = [];
+var planPageIdx = 0;
+
+var SNS_LIST = [
+  {id:'note', label:'NOTE',      icon:'📝', pageId:'ps-note'},
+  {id:'yt',   label:'YouTube',   icon:'▶️', pageId:'ps-yt'},
+  {id:'ig',   label:'Instagram', icon:'📸', pageId:'ps-ig'},
+  {id:'x',    label:'X',         icon:'𝕏',  pageId:'ps-x'},
+  {id:'tt',   label:'TikTok',    icon:'🎵', pageId:'ps-tt'},
+];
+
+function buildPlanPages() {
+  planPages = ['ps1','ps2'];
+  SNS_LIST.forEach(function(s){
+    if(document.getElementById('sns-'+s.id) && document.getElementById('sns-'+s.id).classList.contains('sel')){
+      planPages.push(s.pageId);
+    }
+  });
+  planPages.push('ps3','ps4','ps5');
+}
+
+function openPlanModal() {
+  document.getElementById('planModal').classList.add('active');
+  planPageIdx = 0;
+  buildPlanPages();
+  showPlanPage();
+}
 function closePlanModal() { document.getElementById('planModal').classList.remove('active'); }
-function goPTab(n) {
-  planStep = n;
-  document.querySelectorAll('#planModal .tab-panel').forEach(function(s,i){ s.classList.toggle('active', i+1===n); });
-  document.getElementById('planPrev').style.display = n>1?'':'none';
-  document.getElementById('planNext').textContent = n===5 ? '✓ プランを作成' : '次へ →';
-  updateWizBar(n);
+
+function showPlanPage() {
+  var pageId = planPages[planPageIdx];
+  document.querySelectorAll('#planModal .tab-panel').forEach(function(p){ p.classList.remove('active'); });
+  document.getElementById(pageId).classList.add('active');
+  document.getElementById('planPrev').style.display = planPageIdx>0?'':'none';
+  var isLast = planPageIdx === planPages.length-1;
+  document.getElementById('planNext').textContent = isLast ? '✓ プランを作成' : '次へ →';
+  updateWizBar2(pageId);
 }
+
 function goPDir(d) {
-  var next = planStep + d;
-  if(next>=1 && next<=5) goPTab(next);
-  if(next===6) { alert('プランを作成しました！'); closePlanModal(); }
+  if(d===1 && planPageIdx===0) buildPlanPages(); // SNS選択後に再構築
+  var next = planPageIdx + d;
+  if(next>=0 && next<planPages.length){ planPageIdx=next; showPlanPage(); }
+  if(next>=planPages.length){ alert('プランを作成しました！'); closePlanModal(); }
 }
-function updateWizBar(n) {
-  for(var i=1;i<=5;i++) {
-    var el=document.getElementById('wi'+i);
+
+function updateWizBar2(pageId) {
+  var wizMap = {
+    'ps1':'wi1', 'ps2':'wi2',
+    'ps-note':'wi25','ps-yt':'wi25','ps-ig':'wi25','ps-x':'wi25','ps-tt':'wi25',
+    'ps3':'wi3','ps4':'wi4','ps5':'wi5'
+  };
+  var wizOrder = ['wi1','wi2','wi25','wi3','wi4','wi5'];
+  var current = wizMap[pageId] || 'wi1';
+  var ci = wizOrder.indexOf(current);
+  wizOrder.forEach(function(wid,i){
+    var el = document.getElementById(wid);
+    if(!el) return;
     el.classList.remove('done','active');
-    var c=el.querySelector('.wstep-c');
-    if(i<n){ el.classList.add('done'); c.textContent='✓'; }
-    else if(i===n){ el.classList.add('active'); c.textContent=i; }
-    else { c.textContent=i; }
+    var c = el.querySelector('.wstep-c');
+    if(i<ci){ el.classList.add('done'); if(c) c.textContent='✓'; }
+    else if(i===ci){ el.classList.add('active'); if(c && wid!=='wi25') c.textContent=i+1; }
+  });
+  // SNS別サブステップ表示
+  var snsSubs = ['ps-note','ps-yt','ps-ig','ps-x','ps-tt'];
+  var subBar = document.getElementById('subStepBar');
+  var subLabel = document.getElementById('subStepLabel');
+  if(snsSubs.indexOf(pageId)>=0){
+    var snsPagesInFlow = planPages.filter(function(p){ return snsSubs.indexOf(p)>=0; });
+    var idx = snsPagesInFlow.indexOf(pageId);
+    var snsMeta = SNS_LIST.find(function(s){ return s.pageId===pageId; });
+    subLabel.textContent = snsMeta ? (snsMeta.icon+' '+snsMeta.label+' 設定  （'+((idx+1))+' / '+snsPagesInFlow.length+' SNS）') : '';
+    subBar.style.display = '';
+  } else {
+    subBar.style.display = 'none';
   }
 }
 
